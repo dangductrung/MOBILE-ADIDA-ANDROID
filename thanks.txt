@@ -1,0 +1,10 @@
+https://android.jlelse.eu/right-way-to-create-splash-screen-on-android-e7f1709ba154
+
+https://stackoverflow.com/questions/1520887/how-to-pause-sleep-thread-or-process-in-android
+
+
+
+
+
+
+
