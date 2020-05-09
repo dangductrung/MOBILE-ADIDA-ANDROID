@@ -19,7 +19,7 @@
         >
         <bitmap
             android:gravity="center"
-            android:src="@drawable/vichat_icon" />
+            android:src="@drawable/vichat_icon_origin" />
 
     </item>
 
