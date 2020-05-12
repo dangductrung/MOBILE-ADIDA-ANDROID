@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".profile.Profile">
+
+    <View
+        android:id="@+id/navigationBar"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </View>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/navigationBar"/>
+
+    <View
+        android:id="@+id/tabBar"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+    </View>
+
+    <View
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/tabBar"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationBar"
+        app:layout_constraintVertical_bias="0.0">
+
+    </View>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/mainView"/>
+
+    <ImageButton
+        android:id="@+id/btnBackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:maxWidth="20dp"
+
+        android:maxHeight="20dp"
+        android:src="@drawable/backbutton"
+        app:layout_constraintLeft_toLeftOf="@+id/navigationBar"
+        app:layout_constraintTop_toTopOf="@+id/navigationBar" />
+
+    <ImageButton
+        android:id="@+id/btnSignOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:maxWidth="20dp"
+
+        android:maxHeight="20dp"
+        android:src="@drawable/signoutbutton"
+        app:layout_constraintRight_toRightOf="@+id/navigationBar"
+        app:layout_constraintTop_toTopOf="@+id/navigationBar" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Trang cá nhân của tôi"
+        android:textSize="17dp"
+        app:layout_constraintBottom_toBottomOf="@+id/navigationBar"
+        app:layout_constraintLeft_toLeftOf="@+id/navigationBar"
+        app:layout_constraintRight_toRightOf="@+id/navigationBar"
+        app:layout_constraintTop_toTopOf="@+id/navigationBar" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/profile"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintRight_toRightOf="@+id/mainView"
+        app:layout_constraintTop_toTopOf="@+id/mainView" />
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:width="92dp"
+        android:height="40dp"
+        android:text="Jane"
+        android:textAlignment="center"
+        android:textSize="36dp"
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintRight_toRightOf="@+id/mainView"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image"/>
+
+    <TextView
+        android:id="@+id/txtPlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:width="133dp"
+        android:height="15dp"
+        android:text="San francisco, ca"
+        android:textAlignment="center"
+        android:textSize="13dp"
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintRight_toRightOf="@+id/mainView"
+        app:layout_constraintTop_toBottomOf="@+id/txtName"/>
+
+    <TextView
+        android:id="@+id/aboutMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="16dp"
+        android:width="104dp"
+        android:height="38dp"
+        android:text="Về tôi"
+        android:textAlignment="textStart"
+        android:textSize="24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintTop_toBottomOf="@+id/txtPlace"/>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tabBar"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Chỉnh sửa"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:id="@+id/btnEdit"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnEdit"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Thống kê"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:id="@+id/btnStatistic"/>
+
+
+    <TextView
+        android:id="@+id/aboutMeDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+
+        android:layout_marginTop="20dp"
+        android:height="55dp"
+        android:layout_marginRight="16dp"
+        android:text="1 người bình thường"
+        android:textAlignment="textStart"
+        android:textSize="18dp"
+
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintTop_toBottomOf="@+id/aboutMe"
+        app:layout_constraintBottom_toTopOf="@+id/btnStatistic"
+        app:layout_constraintRight_toRightOf="@+id/mainView"/>
+
+    <ImageButton
+        android:id="@+id/btnHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/homepageicon"
+        android:maxHeight="40dp"
+        android:maxWidth="40dp"
+
+        app:layout_constraintLeft_toLeftOf="@+id/tabBar"
+        app:layout_constraintTop_toTopOf="@+id/tabBar"
+        app:layout_constraintBottom_toBottomOf="@+id/tabBar"
+        android:layout_marginLeft="16dp"/>
+
+    <ImageButton
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/searchicon"
+        android:maxHeight="40dp"
+        android:maxWidth="40dp"
+
+        app:layout_constraintLeft_toLeftOf="@+id/tabBar"
+        app:layout_constraintTop_toTopOf="@+id/tabBar"
+        app:layout_constraintBottom_toBottomOf="@+id/tabBar"
+        app:layout_constraintRight_toRightOf="@+id/tabBar"
+        />
+
+    <ImageButton
+        android:id="@+id/btnCharacter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/charactericon"
+        android:maxHeight="40dp"
+        android:maxWidth="40dp"
+
+        app:layout_constraintRight_toRightOf="@+id/tabBar"
+        app:layout_constraintTop_toTopOf="@+id/tabBar"
+        app:layout_constraintBottom_toBottomOf="@+id/tabBar"
+        android:layout_marginRight="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
