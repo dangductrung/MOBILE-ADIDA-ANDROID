@@ -9,10 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".login.login_page">
+        <activity android:name=".login.LoginPage">
 		</activity>
 
-        <activity android:name=".SpashActivity"
+        <activity android:name=".splash.SpashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

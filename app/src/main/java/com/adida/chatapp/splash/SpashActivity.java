@@ -1,4 +1,4 @@
-package com.adida.chatapp;
+package com.adida.chatapp.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.os.SystemClock;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.adida.chatapp.login.LoginPage;
+
 public class SpashActivity extends AppCompatActivity {
 
     @Override
@@ -14,7 +16,7 @@ public class SpashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SystemClock.sleep(1000);
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, LoginPage.class));
         finish();
     }
 }

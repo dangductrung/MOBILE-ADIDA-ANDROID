@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.adida.chatapp.R;
 
-public class login_page extends AppCompatActivity {
+public class LoginPage extends AppCompatActivity {
 
 
     @Override
