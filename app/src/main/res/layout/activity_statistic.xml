@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile">
+    tools:context=".Statistic">
 
     <View
         android:id="@+id/navigationBar"
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="Trang cá nhân của tôi"
+        android:text="Thống kê"
         android:textSize="17dp"
         app:layout_constraintBottom_toBottomOf="@+id/navigationBar"
         app:layout_constraintLeft_toLeftOf="@+id/navigationBar"
@@ -133,65 +133,70 @@
         app:layout_constraintTop_toBottomOf="@+id/txtName"/>
 
     <TextView
-        android:id="@+id/aboutMe"
+
+        android:id="@+id/txtStatisticLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:layout_marginLeft="16dp"
         android:width="104dp"
         android:height="38dp"
-        android:text="Về tôi"
-        android:textAlignment="textStart"
+        android:text="Thống kê"
+        android:textAlignment="center"
         android:textSize="24dp"
         app:layout_constraintLeft_toLeftOf="@+id/mainView"
-        app:layout_constraintTop_toBottomOf="@+id/txtPlace"/>
-
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tabBar"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Chỉnh sửa"
-        android:textStyle="bold"
-        android:textAllCaps="false"
-        android:id="@+id/btnEdit"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btnEdit"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Thống kê"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:id="@+id/btnStatistic"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/txtPlace"
+        app:layout_constraintRight_toRightOf="@+id/mainView"/>
 
     <TextView
-        android:id="@+id/aboutMeDetail"
-        android:layout_width="match_parent"
+        android:id="@+id/txtStatisticChatCount"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-
-        android:layout_marginTop="20dp"
-        android:height="55dp"
-        android:layout_marginRight="16dp"
-        android:text="1 người bình thường"
-        android:textAlignment="textStart"
-        android:textSize="18dp"
-
+        android:layout_marginTop="13dp"
+        android:height="38dp"
+        android:text="Trong 1 tháng bạn đã chat: xxx lần"
+        android:textAlignment="center"
+        android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="@+id/mainView"
-        app:layout_constraintTop_toBottomOf="@+id/aboutMe"
-        app:layout_constraintBottom_toTopOf="@+id/btnStatistic"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatisticLabel"
+        app:layout_constraintRight_toRightOf="@+id/mainView"/>
+
+    <TextView
+        android:id="@+id/txtStatisticLikeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:height="38dp"
+        android:text="Trong 1 tháng bạn đã like: xxx lần"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatisticChatCount"
+        app:layout_constraintRight_toRightOf="@+id/mainView"/>
+
+    <TextView
+        android:id="@+id/txtStatisticChatWithPeopleCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:height="38dp"
+        android:text="Trong 1 tháng bạn đã like: xxx lần"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatisticLikeCount"
+        app:layout_constraintRight_toRightOf="@+id/mainView"/>
+
+    <TextView
+        android:id="@+id/txtStatisticOnlineCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:height="38dp"
+        android:text="Bạn đã online: xxx phút"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        app:layout_constraintLeft_toLeftOf="@+id/mainView"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatisticChatWithPeopleCount"
         app:layout_constraintRight_toRightOf="@+id/mainView"/>
 
     <ImageButton

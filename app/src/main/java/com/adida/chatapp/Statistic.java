@@ -1,33 +1,28 @@
 package com.adida.chatapp;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
-public class Profile extends Activity {
+public class Statistic extends Activity {
 
     ImageButton btnBackButton, btnSignOutButton, btnHome, btnCharacter, btnSearch;
-    TextView txtName, txtPlace, txtAboutMe, txtAboutMeDetail;
-    Button btnEdit, btnStatistic;
+    TextView txtName, txtPlace, txtStatisticLabel, txtStatisticChatCount, txtStatisticLikeCount, txtStatisticChatWithPeopleCount, txtStatisticOnlineCount;
     CircleImageView imageView;
     View navigationBar, mainView, tabBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile);
+        setContentView(R.layout.activity_statistic);
         setup();
         prepareUI();
         addAction();
@@ -42,11 +37,12 @@ public class Profile extends Activity {
 
         txtName = (TextView)findViewById(R.id.txtName);
         txtPlace = (TextView)findViewById(R.id.txtPlace);
-        txtAboutMe = (TextView)findViewById(R.id.aboutMe);
-        txtAboutMeDetail = (TextView)findViewById(R.id.aboutMeDetail);
 
-        btnEdit = (Button)findViewById(R.id.btnEdit);
-        btnStatistic = (Button)findViewById(R.id.btnStatistic);
+        txtStatisticLabel = (TextView)findViewById(R.id.txtStatisticLabel);
+        txtStatisticChatCount = (TextView)findViewById(R.id.txtStatisticChatCount);
+        txtStatisticLikeCount = (TextView)findViewById(R.id.txtStatisticLikeCount);
+        txtStatisticChatWithPeopleCount = (TextView)findViewById(R.id.txtStatisticChatWithPeopleCount);
+        txtStatisticOnlineCount = (TextView)findViewById(R.id.txtStatisticOnlineCount);
 
         imageView = (CircleImageView)findViewById(R.id.profile_image);
 
@@ -56,12 +52,6 @@ public class Profile extends Activity {
     }
 
     private void prepareUI(){
-        btnStatistic.setBackgroundColor(Color.parseColor("#0064EF"));
-        btnEdit.setBackgroundColor(Color.parseColor("#0064EF"));
-
-        btnEdit.setTextColor(Color.parseColor("#FFFFFF"));
-        btnStatistic.setTextColor(Color.parseColor("#FFFFFF"));
-
         btnBackButton.setBackgroundColor(Color.parseColor("#FFFFFF"));
         btnSignOutButton.setBackgroundColor(Color.parseColor("#FFFFFF"));
         btnHome.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -73,18 +63,12 @@ public class Profile extends Activity {
         tabBar.setBackgroundColor(Color.parseColor("#FFFFFF"));
     }
 
-
     private void addAction(){
-        btnStatistic.setOnClickListener(new View.OnClickListener() {
+        btnBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toStatisticPage();
+               onBackPressed();
             }
         });
-    }
-
-    private void toStatisticPage(){
-        Intent intent = new Intent(this, Statistic.class);
-        startActivity(intent);
     }
 }
