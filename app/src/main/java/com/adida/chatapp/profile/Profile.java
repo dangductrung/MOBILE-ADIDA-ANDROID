@@ -1,8 +1,7 @@
-package com.adida.chatapp;
+package com.adida.chatapp.profile;
 
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +11,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+
+import com.adida.chatapp.R;
+import com.adida.chatapp.statistic.Statistic;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

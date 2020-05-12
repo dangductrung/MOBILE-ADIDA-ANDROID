@@ -1,4 +1,4 @@
-package com.adida.chatapp;
+package com.adida.chatapp.statistic;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.adida.chatapp.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
