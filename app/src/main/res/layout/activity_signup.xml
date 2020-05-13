@@ -30,6 +30,7 @@
                 android:layout_marginTop="150dp"></TextView>
 
             <EditText
+                android:inputType="textEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -46,6 +47,16 @@
                 android:id="@+id/usernameRegisterEditText"
                 android:hint="Tên đăng nhập/Email">
             </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Email không hợp lệ."
+                android:textColor="@color/red"
+                android:visibility="visible"
+                android:id="@+id/errorEmail"
+                ></TextView>
 
             <EditText
                 android:layout_width="match_parent"
