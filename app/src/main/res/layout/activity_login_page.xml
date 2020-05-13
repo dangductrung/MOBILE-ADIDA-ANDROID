@@ -26,14 +26,14 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/black"
                 android:layout_marginTop="150dp"></TextView>
-
             <EditText
+                android:inputType="textEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="60dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:minHeight="50dp"
                 android:focusedByDefault="false"
                 android:background="@drawable/edit_text_border"
@@ -44,7 +44,15 @@
                 android:id="@+id/usernameEditText"
                 android:hint="Tên đăng nhập/Email">
             </EditText>
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Email đăng nhập sai. Vui lòng nhập lại."
+                android:textColor="@color/red"
+                android:visibility="gone"
+                android:id="@+id/errorUsernameMessage"
+                ></TextView>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +61,7 @@
                 android:layout_marginRight="16dp"
                 android:focusedByDefault="false"
                 android:inputType="textPassword"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:minHeight="50dp"
                 android:background="@drawable/edit_text_border"
                 android:drawableLeft="@drawable/ic_lock_grey"
@@ -63,7 +71,15 @@
                 android:maxLines="1"
                 android:hint="Mật khẩu">
             </EditText>
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:text="Mật khẩu sai. Vui lòng nhập lại."
+                android:textColor="@color/red"
+                android:visibility="gone"
+                android:id="@+id/errorPasswordMessage"
+                ></TextView>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,6 +88,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:id="@+id/loginButton"
                 android:text="@string/login">
             </Button>
