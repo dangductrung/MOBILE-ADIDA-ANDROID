@@ -1,4 +1,4 @@
-package com.adida.chatapp;
+package com.example.webrtcchat;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.adida.chatapp", appContext.getPackageName());
+        assertEquals("com.example.webrtcchat", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package com.adida.chatapp;
+package com.example.webrtcchat;
 
 import org.junit.Test;
 
