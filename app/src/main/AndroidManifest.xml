@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".signup.SignupPage" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".main.MainActivity" />
         <activity android:name=".statistic.Statistic" />
         <activity android:name=".profile.Profile" />
     </application>
