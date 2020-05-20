@@ -81,6 +81,8 @@ public class SearchFragment extends Fragment {
         srcSearchView = (SearchView) layout.findViewById(R.id.srcSearchView);
         customRowCell = new CustomRowCell(context, data);
 
+        listSearchView.setAdapter(customRowCell);
+
         return layout;
     }
 

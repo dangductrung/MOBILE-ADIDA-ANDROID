@@ -25,7 +25,7 @@ public class CustomRowCell extends ArrayAdapter<User> {
         View row = inflater.inflate(R.layout.activity_custom_row_cell, parent, false);
         TextView name = (TextView) row.findViewById(R.id.userId);
         ImageView icon = (ImageView) row.findViewById(R.id.icon);
-        name.setText(user.userId);
+        name.setText(user.name);
         icon.setImageResource(user.imageId);
         icon.setScaleType(ImageView.ScaleType.FIT_XY);
 
