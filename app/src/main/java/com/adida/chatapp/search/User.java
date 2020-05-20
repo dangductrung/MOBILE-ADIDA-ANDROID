@@ -10,4 +10,8 @@ public class User {
         this.name = name;
         this.imageId = imageId;
     }
+
+    public String getName(){
+        return this.name;
+    }
 }

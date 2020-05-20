@@ -83,11 +83,24 @@ public class SearchFragment extends Fragment {
 
         listSearchView.setAdapter(customRowCell);
 
+        srcSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                customRowCell.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         return layout;
     }
 
     private void createData(){
-        String[] name = {"Nguyen Van A", "Nguyen Van B", "Nguyen Van C", "Nguyen Van D"};
+        String[] name = {"A", "B", "C", "D"};
         String[] id = {"#01","#02","#03","#04"};
         int[] image = {R.drawable.main_yellow_hair, R.drawable.main_yellow_hair, R.drawable.main_yellow_hair, R.drawable.main_yellow_hair};
 
