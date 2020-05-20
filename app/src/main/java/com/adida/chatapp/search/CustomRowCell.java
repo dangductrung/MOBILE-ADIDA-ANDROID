@@ -27,7 +27,7 @@ public class CustomRowCell extends BaseAdapter implements Filterable {
     public CustomRowCell(Context context, ArrayList<User> user) {
         mContext = context;
         userList = user;
-        userListFull = user;
+        userListFull = new ArrayList<User>(user);
     }
 
     @Override
