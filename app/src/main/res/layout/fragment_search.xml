@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".search.SearchFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -13,9 +14,10 @@
         android:layout_height="wrap_content"
         android:queryHint="Tìm kiếm"
         android:iconifiedByDefault="false"
-        android:padding="10dp"
         android:gravity="center"
+        android:paddingLeft="15dp"
         android:id="@+id/srcSearchView"
+        android:background="@drawable/bordersearch"
         />
     <ListView
         android:layout_width="match_parent"
