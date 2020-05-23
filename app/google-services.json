@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "7217916771",
+    "firebase_url": "https://chatapp-720b3.firebaseio.com",
+    "project_id": "chatapp-720b3",
+    "storage_bucket": "chatapp-720b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7217916771:android:c8f98bee50eba999ff0156",
+        "android_client_info": {
+          "package_name": "com.adida.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "7217916771-t60p7oq23fk96gk5fpn7gn1a08adaoop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7gYfRdKlp55STbYDZMs4RAjwHR5iNaq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "7217916771-t60p7oq23fk96gk5fpn7gn1a08adaoop.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

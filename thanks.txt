@@ -1,0 +1,16 @@
+https://android.jlelse.eu/right-way-to-create-splash-screen-on-android-e7f1709ba154
+
+https://stackoverflow.com/questions/1520887/how-to-pause-sleep-thread-or-process-in-android
+
+https://stackoverflow.com/questions/23079355/android-bitmap-image-size-in-xml
+
+https://stackoverflow.com/questions/5976805/android-linearlayout-gradient-background
+
+draw icon: draw.io: https://app.diagrams.net/
+
+
+
+
+
+
+
