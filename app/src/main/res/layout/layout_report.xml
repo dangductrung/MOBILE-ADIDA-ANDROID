@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:isScrollContainer="true">
+
 
     <TextView
         android:layout_width="match_parent"
@@ -15,7 +17,7 @@
         android:layout_margin="10dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Tiêu đề"
         android:textStyle="bold"
@@ -27,6 +29,7 @@
         android:id="@+id/edtTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:padding="10dp"
         android:hint="Nhập Tiêu Đề"
         android:layout_margin="10dp"
         android:background="@drawable/roundedittext"/>
@@ -41,20 +44,20 @@
     <EditText
         android:id="@+id/edtContent"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:hint="Nhập nội dung"
         android:layout_margin="10dp"
+        android:padding="10dp"
         android:background="@drawable/roundedittext"
         android:isScrollContainer="true"
         android:gravity="left|top"
+
         />
-
-
 
     <Button
         android:id="@+id/btnReport"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:text="Gửi"
         android:gravity="center"
         android:layout_margin="10dp"
@@ -62,4 +65,5 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         />
+
 </LinearLayout>
