@@ -33,18 +33,30 @@
                     android:textColor="@color/black"
                     android:text="Trang cá nhân"></TextView>
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
                     <ImageButton
                         android:background="@color/transparent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
-                        android:layout_weight="10"
                         android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_pencil"></ImageButton>
-                </LinearLayout>
+                        android:src="@drawable/ic_pencil"
+                        android:id="@+id/btnEditButtonImage">
+                    </ImageButton>
+                    <Button
+                        android:background="@color/transparent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="16dp"
+                        android:text="Xong"
+                        android:textSize="12dp"
+                        android:id="@+id/btnEditButtonText"
+                        ></Button>
+                </FrameLayout>
             </LinearLayout>
             <ImageView
                 android:layout_width="match_parent"
@@ -70,7 +82,7 @@
                     android:layout_marginLeft="16dp"
                     android:text="Họ và tên">
                 </TextView>
-                <TextView
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -80,8 +92,10 @@
                     android:layout_marginLeft="16dp"
                     android:text="Nguyễn Phi Thăng"
                     android:layout_marginRight="16dp"
-                    tools:ignore="RtlCompat">
-                </TextView>
+                    tools:ignore="RtlCompat"
+                    android:id="@+id/txtProfileName"
+                    android:enabled="false">
+                </EditText>
             </LinearLayout>
 
             <LinearLayout
@@ -132,7 +146,7 @@
                     android:layout_marginLeft="16dp"
                     android:text="Số điện thoại">
                 </TextView>
-                <TextView
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -142,8 +156,10 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:text="0982449xxx"
-                    tools:ignore="RtlCompat">
-                </TextView>
+                    tools:ignore="RtlCompat"
+                    android:id="@+id/txtProfilePhone"
+                    android:enabled="false">
+                </EditText>
             </LinearLayout>
 
             <Button
@@ -170,7 +186,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:textStyle="bold"
-
+                android:id="@+id/btnSignout"
                 android:text="Đăng xuất">
             </Button>
         </LinearLayout>

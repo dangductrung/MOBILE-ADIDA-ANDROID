@@ -27,7 +27,6 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-
         <activity android:name=".statistic.Statistic" />
         <activity android:name=".profile.Profile" />
     </application>
