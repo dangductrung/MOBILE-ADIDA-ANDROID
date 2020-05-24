@@ -4,6 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
@@ -20,6 +26,12 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    Button btnEditButtonText;
+    ImageButton btnEditButtonImage;
+    EditText txtProfileName, txtProfilePhone;
+
+    String profileName, profilePhone;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -71,6 +83,68 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_profile, container, false);
+        txtProfileName = (EditText) layout.findViewById(R.id.txtProfileName);
+        txtProfilePhone = (EditText) layout.findViewById(R.id.txtProfilePhone);
+
+        btnEditButtonImage = (ImageButton) layout.findViewById(R.id.btnEditButtonImage);
+        btnEditButtonText = (Button) layout.findViewById(R.id.btnEditButtonText);
+
+        btnEditButtonImage.setVisibility(View.VISIBLE);
+        btnEditButtonText.setVisibility(View.INVISIBLE);
+
+        addAction();
+
+        return layout;
+    }
+
+    private void addAction(){
+        btnEditButtonImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                didTapEditButton();
+            }
+        });
+        btnEditButtonText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                didTapDoneButton();
+            }
+        });
+    }
+
+    private void didTapEditButton(){
+        btnEditButtonImage.setVisibility(View.INVISIBLE);
+        btnEditButtonText.setVisibility(View.VISIBLE);
+
+        txtProfileName.setEnabled(true);
+        txtProfilePhone.setEnabled(true);
+
+        profileName = txtProfileName.getText().toString();
+        profilePhone = txtProfilePhone.getText().toString();
+    }
+
+    private void didTapDoneButton(){
+        btnEditButtonText.setVisibility(View.INVISIBLE);
+        btnEditButtonImage.setVisibility(View.VISIBLE);
+
+        txtProfileName.setEnabled(false);
+        txtProfilePhone.setEnabled(false);
+
+        String tempName = txtProfileName.getText().toString();
+        String tempPhone = txtProfilePhone.getText().toString();
+
+        if (tempName == "") {
+            txtProfileName.setText(profileName);
+        } else {
+            txtProfileName.setText(tempName);
+        }
+
+        if (tempPhone == "") {
+            txtProfilePhone.setText(profilePhone);
+        } else {
+            txtProfilePhone.setText(tempPhone);
+        }
+
     }
 }
