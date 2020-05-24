@@ -186,7 +186,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:textStyle="bold"
-
+                android:id="@+id/btnSignout"
                 android:text="Đăng xuất">
             </Button>
         </LinearLayout>

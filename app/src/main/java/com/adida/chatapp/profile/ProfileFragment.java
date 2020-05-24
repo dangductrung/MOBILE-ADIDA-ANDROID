@@ -32,7 +32,7 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    Button btnEditButtonText;
+    Button btnEditButtonText, btnStatistic, btnSignout;
     ImageButton btnEditButtonImage;
     EditText txtProfileName, txtProfilePhone;
 
@@ -99,6 +99,8 @@ public class ProfileFragment extends Fragment {
 
         btnEditButtonImage = (ImageButton) layout.findViewById(R.id.btnEditButtonImage);
         btnEditButtonText = (Button) layout.findViewById(R.id.btnEditButtonText);
+        btnStatistic = (Button) layout.findViewById(R.id.btnStatistic);
+        btnSignout = (Button) layout.findViewById(R.id.btnSignout);
 
         btnEditButtonImage.setVisibility(View.VISIBLE);
         btnEditButtonText.setVisibility(View.INVISIBLE);
@@ -126,6 +128,8 @@ public class ProfileFragment extends Fragment {
     private void didTapEditButton(){
         btnEditButtonImage.setVisibility(View.INVISIBLE);
         btnEditButtonText.setVisibility(View.VISIBLE);
+        btnStatistic.setVisibility(View.INVISIBLE);
+        btnSignout.setVisibility(View.INVISIBLE);
 
         txtProfileName.setEnabled(true);
         txtProfilePhone.setEnabled(true);
@@ -139,6 +143,8 @@ public class ProfileFragment extends Fragment {
     private void didTapDoneButton(){
         btnEditButtonText.setVisibility(View.INVISIBLE);
         btnEditButtonImage.setVisibility(View.VISIBLE);
+        btnStatistic.setVisibility(View.VISIBLE);
+        btnSignout.setVisibility(View.VISIBLE);
 
         txtProfileName.setEnabled(false);
         txtProfilePhone.setEnabled(false);
