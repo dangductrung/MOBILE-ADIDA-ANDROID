@@ -54,6 +54,17 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+//        Button btnStatis = (Button) getView().findViewById(R.id.btnStatistic);
+//
+//        final Intent  intent = new Intent(getView().getContext(), StatisticPage.class);
+//
+//        btnStatis.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(intent);
+//            }
+//        });
     }
 
     @Override
