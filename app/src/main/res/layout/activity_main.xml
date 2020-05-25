@@ -12,17 +12,56 @@
         android:weightSum="2"
         android:orientation="vertical">
 
-        <org.webrtc.SurfaceViewRenderer
-            android:id="@+id/surfaceLocal"
-            android:layout_width="match_parent"
+        <LinearLayout android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_weight="1"
+            android:weightSum="2"
+            android:orientation="horizontal">
 
-        <org.webrtc.SurfaceViewRenderer
-            android:id="@+id/surfaceRemote"
-            android:layout_width="match_parent"
+            <org.webrtc.SurfaceViewRenderer
+                android:id="@+id/surfaceLocal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <org.webrtc.SurfaceViewRenderer
+                android:id="@+id/surfaceRemote"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_weight="1"
+            android:weightSum="6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtChatBox"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"/>
+
+            <EditText
+                android:id="@+id/txtToSend"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btnChatSend"
+                android:text="Send"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

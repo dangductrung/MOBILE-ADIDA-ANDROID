@@ -9,6 +9,9 @@ import org.webrtc.EglBase;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoCapturer;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+
 public class Utils {
     public static SurfaceViewRenderer InitSurfaceViewRenderer(SurfaceViewRenderer svr, EglBase elg){
         svr.init(elg.getEglBaseContext(), null);
@@ -58,5 +61,9 @@ public class Utils {
 
     private static boolean useCamera2(Context context) {
         return Camera2Enumerator.isSupported(context);
+    }
+
+    public static ByteBuffer stringToByteBuffer(String msg, Charset charset) {
+        return ByteBuffer.wrap(msg.getBytes(charset));
     }
 }
