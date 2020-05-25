@@ -1,6 +1,8 @@
 package com.adida.chatapp.profile;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +11,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.entities.User;
+import com.adida.chatapp.firebase_manager.FirebaseManager;
+import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
+import com.adida.chatapp.sharepref.SharePref;
+import com.adida.chatapp.statistic.StatisticPage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 
 /**
@@ -35,9 +48,10 @@ public class ProfileFragment extends Fragment {
     Button btnEditButtonText, btnStatistic, btnSignout;
     ImageButton btnEditButtonImage;
     EditText txtProfileName, txtProfilePhone;
-
+    ProgressDialog progressDialog;
+    TextView email;
     String profileName, profilePhone;
-
+    User currnetUser;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -46,15 +60,6 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -72,21 +77,11 @@ public class ProfileFragment extends Fragment {
         try {
             context = getActivity(); // use this reference to invoke main callbacks
             main = (MainActivity) getActivity();
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             throw new IllegalStateException("MainActivity must implement callbacks");
         }
 
-//        Button btnStatis = (Button) getView().findViewById(R.id.btnStatistic);
-//
-//        final Intent  intent = new Intent(getView().getContext(), StatisticPage.class);
-//
-//        btnStatis.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(intent);
-//            }
-//        });
+
     }
 
     @Override
@@ -102,15 +97,28 @@ public class ProfileFragment extends Fragment {
         btnStatistic = (Button) layout.findViewById(R.id.btnStatistic);
         btnSignout = (Button) layout.findViewById(R.id.btnSignout);
 
+        email = (TextView) layout.findViewById(R.id.userEmail);
         btnEditButtonImage.setVisibility(View.VISIBLE);
         btnEditButtonText.setVisibility(View.INVISIBLE);
 
+        Button btnStatis = (Button) layout.findViewById(R.id.btnStatistic);
+
+        final Intent intent = new Intent(main, StatisticPage.class);
+
+        btnStatis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+            }
+        });
+
         addAction();
+        getUserData();
 
         return layout;
     }
 
-    private void addAction(){
+    private void addAction() {
         btnEditButtonImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +133,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void didTapEditButton(){
+    private void didTapEditButton() {
         btnEditButtonImage.setVisibility(View.INVISIBLE);
         btnEditButtonText.setVisibility(View.VISIBLE);
         btnStatistic.setVisibility(View.INVISIBLE);
@@ -140,7 +148,7 @@ public class ProfileFragment extends Fragment {
         navBar.setVisibility(View.INVISIBLE);
     }
 
-    private void didTapDoneButton(){
+    private void didTapDoneButton() {
         btnEditButtonText.setVisibility(View.INVISIBLE);
         btnEditButtonImage.setVisibility(View.VISIBLE);
         btnStatistic.setVisibility(View.VISIBLE);
@@ -158,13 +166,44 @@ public class ProfileFragment extends Fragment {
             txtProfileName.setText(profileName);
         } else {
             txtProfileName.setText(tempName);
+            currnetUser.name = tempName;
         }
 
         if (tempPhone == "") {
             txtProfilePhone.setText(profilePhone);
         } else {
             txtProfilePhone.setText(tempPhone);
+            currnetUser.phone = tempPhone;
         }
+        FirebaseManager.getInstance().updateUser(currnetUser, context);
 
+    }
+
+    private void getUserData() {
+        progressDialog = ProgressDialog.show(context, "", "Loading...");
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(SharePref.getInstance(context).getUuid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, String> param = (HashMap<String, String>) dataSnapshot.getValue();
+
+                com.adida.chatapp.entities.User user = new com.adida.chatapp.entities.User();
+                user.email = param.get("email");
+                user.countChatMessage = param.get("countChatMessage");
+                user.countCreateConnection = param.get("countCreateConnection");
+                user.name = param.get("name");
+                user.phone = param.get("phone");
+
+                txtProfileName.setText(user.name);
+                txtProfilePhone.setText(user.phone);
+                email.setText(user.email);
+                progressDialog.dismiss();
+                currnetUser = user;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

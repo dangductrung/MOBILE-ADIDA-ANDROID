@@ -116,18 +116,19 @@
                     android:layout_marginLeft="16dp"
                     android:text="Email">
                 </TextView>
+
                 <TextView
+                    android:id="@+id/userEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:layout_gravity="right"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/black"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:gravity="center"
                     android:text="Test@gmail.com"
-                    tools:ignore="RtlCompat">
-                </TextView>
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/black"
+                    tools:ignore="RtlCompat"></TextView>
             </LinearLayout>
 
             <LinearLayout

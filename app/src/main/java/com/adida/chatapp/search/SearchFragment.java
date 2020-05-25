@@ -1,5 +1,6 @@
 package com.adida.chatapp.search;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,12 +10,22 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.entities.User;
+import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -31,9 +42,8 @@ public class SearchFragment extends Fragment {
     private CustomRowCell customRowCell;
     SearchView srcSearchView;
     ListView listSearchView;
-
+    ProgressDialog progressDialog;
     private ArrayList<User> data = new ArrayList<User>();
-    private ArrayList<User> dataFull = new ArrayList<User>();
 
     public SearchFragment() {
         // Required empty public constructor
@@ -75,13 +85,11 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_search, null);
 
-        createData();
+        getUserList();
 
         listSearchView = (ListView) layout.findViewById(R.id.listSearchView);
         srcSearchView = (SearchView) layout.findViewById(R.id.srcSearchView);
-        customRowCell = new CustomRowCell(context, data);
 
-        listSearchView.setAdapter(customRowCell);
 
         srcSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -99,13 +107,35 @@ public class SearchFragment extends Fragment {
         return layout;
     }
 
-    private void createData(){
-        String[] name = {"A", "B", "C", "D"};
-        String[] id = {"#01","#02","#03","#04"};
-        int[] image = {R.drawable.main_yellow_hair, R.drawable.main_yellow_hair, R.drawable.main_yellow_hair, R.drawable.main_yellow_hair};
+    private void getUserList() {
+        progressDialog = ProgressDialog.show(context, "","Loading...");
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, HashMap<String, String>> param = (HashMap<String, HashMap<String, String>>) dataSnapshot.getValue();
+                ArrayList<com.adida.chatapp.entities.User> list = new ArrayList<com.adida.chatapp.entities.User>();
+                Set<String> keys = param.keySet();
+                for (Iterator<String> it = keys.iterator(); it.hasNext();) {
+                    HashMap<String, String> data = param.get(it.next());
+                    com.adida.chatapp.entities.User user = new com.adida.chatapp.entities.User();
+                    user.email = data.get("email");
+                    user.countChatMessage =data.get("countChatMessage");
+                    user.countCreateConnection = data.get("countCreateConnection");
+                    user.name = data.get("name");
+                    user.phone = data.get("phone");
+                    list.add(user);
+                }
+                data = list;
+                customRowCell = new CustomRowCell(context, data);
 
-        for(int i =0 ; i<name.length ; ++i) {
-            data.add(new User(id[i], name[i], image[i]));
-        }
+                listSearchView.setAdapter(customRowCell);
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
