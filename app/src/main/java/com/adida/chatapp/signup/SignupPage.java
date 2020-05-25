@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.login.LoginPage;
+import com.adida.chatapp.sharepref.SharePref;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -83,6 +85,9 @@ public class SignupPage extends Activity implements View.OnTouchListener {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Log.d("", "createUserWithEmail:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    SharePref.getInstance(getApplicationContext()).setUuid(user.getUid());
+                    FirebaseManager.getInstance().createNewUser(username.getText().toString(), getApplicationContext());
                     startActivity(gotoLoginIntent);
                 } else {
                     Log.w("", "createUserWithEmail:failure", task.getException());

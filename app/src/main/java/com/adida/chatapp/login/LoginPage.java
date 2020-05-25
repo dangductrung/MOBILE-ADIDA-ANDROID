@@ -16,10 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.signup.SignupPage;
 import com.adida.chatapp.stringhelper.StringHelper;
-import com.adida.chatapp.stringkeys.StringKeys;
+import com.adida.chatapp.keys.StringKeys;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -48,7 +49,9 @@ public class LoginPage extends AppCompatActivity {
         signupIntent = new Intent(this, SignupPage.class);
 
         intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         this.setup();
+
     }
 
     @Override
@@ -84,6 +87,7 @@ public class LoginPage extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
                     saveId(user.getUid());
+                    FirebaseManager.getInstance().setState(true, getApplicationContext());
                     startActivity(intent);
                 } else {
                     signInFail();
