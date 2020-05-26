@@ -28,7 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
 
 /**
@@ -78,32 +77,35 @@ public class HomeFragment extends Fragment {
     private void getUserList() {
         progressDialog = ProgressDialog.show(context, "","Loading...");
 
-        FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                HashMap<String, HashMap<String, String>> param = (HashMap<String, HashMap<String, String>>) dataSnapshot.getValue();
-                ArrayList<com.adida.chatapp.entities.User> list = new ArrayList<com.adida.chatapp.entities.User>();
-                Set<String> keys = param.keySet();
-                for (Iterator<String> it = keys.iterator(); it.hasNext();) {
-                    HashMap<String, String> data = param.get(it.next());
-                    com.adida.chatapp.entities.User user = new com.adida.chatapp.entities.User();
-                    user.email = data.get("email");
-                    user.countChatMessage =data.get("countChatMessage");
-                    user.countCreateConnection = data.get("countCreateConnection");
-                    user.name = data.get("name");
-                    user.phone = data.get("phone");
-                    user.uuid = data.get("uuid");
-                    String uuid = SharePref.getInstance(context).getUuid();
-                    boolean res = user.uuid.equals(uuid);
-                    if(!res) {
-                        list.add(user);
+                data.clear();
+                HashMap<String, Boolean> state = (HashMap<String, Boolean>) dataSnapshot.getValue();
+                for (Iterator<String> it = state.keySet().iterator(); it.hasNext(); ) {
+                    String uuid = it.next();
+                    if (state.get(uuid).booleanValue() == true) {
+                        FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(uuid).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                User user = dataSnapshot.getValue(User.class);
+                                if (!user.uuid.equals(SharePref.getInstance(context).getUuid())) {
+                                    data.add(user);
+                                }
+
+                                customRowCell = new CustomRowCell(context, data);
+
+                                listView.setAdapter(customRowCell);
+                                progressDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 }
-                data = list;
-                customRowCell = new CustomRowCell(context, data);
-
-                listView.setAdapter(customRowCell);
-                progressDialog.dismiss();
             }
 
             @Override
@@ -111,6 +113,9 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+
+
     }
 
     @Override

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.adida.chatapp.R;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.main.MainActivity;
+import com.adida.chatapp.sharepref.SharePref;
 import com.adida.chatapp.signup.SignupPage;
 import com.adida.chatapp.stringhelper.StringHelper;
 import com.adida.chatapp.keys.StringKeys;
@@ -47,11 +48,16 @@ public class LoginPage extends AppCompatActivity {
         errorPassword = (TextView) findViewById(R.id.errorPasswordMessage);
 
         signupIntent = new Intent(this, SignupPage.class);
-
         intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
         this.setup();
+        onFlow();
+    }
 
+    void onFlow() {
+        String a = SharePref.getInstance(getApplicationContext()).getUuid();
+        if (!(SharePref.getInstance(getApplicationContext()).getUuid() == null)) {
+            startActivity(intent);
+        }
     }
 
     @Override
