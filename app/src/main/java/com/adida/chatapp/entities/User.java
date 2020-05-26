@@ -5,6 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class User {
+    public String uuid;
     public String name;
     public String phone;
     public String email;
@@ -16,6 +17,7 @@ public class User {
     // Default constructor required for calls to
     // DataSnapshot.getValue(User.class)
     public User() {
+        uuid = "";
         name = "";
         phone = "";
         email = "";
@@ -24,7 +26,8 @@ public class User {
         countCreateConnection = "0";
     }
 
-    public User(String name, String phone, String email, String countChatMessage, String countCreateConnection) {
+    public User(String uuid, String name, String phone, String email, String countChatMessage, String countCreateConnection) {
+        this.uuid = uuid;
         this.name = name;
         this.phone = phone;
         this.email = email;

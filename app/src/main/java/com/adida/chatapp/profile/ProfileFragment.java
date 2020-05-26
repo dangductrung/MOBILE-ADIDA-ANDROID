@@ -103,7 +103,7 @@ public class ProfileFragment extends Fragment {
 
         Button btnStatis = (Button) layout.findViewById(R.id.btnStatistic);
 
-        final Intent intent = new Intent(main, StatisticPage.class);
+        final Intent intent = new Intent(getActivity(), StatisticPage.class);
 
         btnStatis.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +192,7 @@ public class ProfileFragment extends Fragment {
                 user.countCreateConnection = param.get("countCreateConnection");
                 user.name = param.get("name");
                 user.phone = param.get("phone");
+                user.uuid = param.get("uuid");
 
                 txtProfileName.setText(user.name);
                 txtProfilePhone.setText(user.phone);

@@ -89,6 +89,7 @@ public class HomeFragment extends Fragment {
                     user.countCreateConnection = data.get("countCreateConnection");
                     user.name = data.get("name");
                     user.phone = data.get("phone");
+                    user.uuid = data.get("uuid");
                     list.add(user);
 
                 }
