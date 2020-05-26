@@ -1,6 +1,5 @@
 package com.adida.chatapp.extendapplication;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.adida.chatapp.webrtc_connector.RTCPeerConnectionWrapper;
@@ -12,25 +11,18 @@ import org.webrtc.PeerConnectionFactory;
 
 import java.util.HashMap;
 
-public class ChatApplication extends Application {
+public class ChatApplication {
 
-    private static Context context;
+    private static ChatApplication instance;
 
     private static PeerConnectionFactory peerConnectionFactory;
 
-    public static Context getContext() {
-        return context;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        //  instance = this;
-        context = getApplicationContext();
-    }
 
     public static ChatApplication getInstance(){
-        return (ChatApplication)context;
+        if (instance == null) {
+            instance = new ChatApplication();
+        }
+        return instance;
     }
 
     public static void initPeerConnectionFactory(Context activityContext){
@@ -58,7 +50,11 @@ public class ChatApplication extends Application {
 
     private HashMap<String, RTCPeerConnectionWrapper> connections;
     {
-        connections= new HashMap<>();
+        connections= new HashMap<String, RTCPeerConnectionWrapper>();
+    }
+
+    public void clearConnection() {
+        connections= new HashMap<String, RTCPeerConnectionWrapper>();
     }
 
     public PeerConnectionFactory getPeerConnectionFactory()

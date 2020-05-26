@@ -61,6 +61,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     public boolean onSubmit(CharSequence input) {
         super.messagesAdapter.addToStart(
                 MessagesFixtures.getTextMessage(input.toString()), true);
+        ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId).sendDataChannelMessage(input.toString());
         return true;
     }
 

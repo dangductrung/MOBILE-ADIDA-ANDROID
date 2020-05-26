@@ -55,6 +55,8 @@ public class RTCPeerConnectionWrapper {
 
             @Override
             public void onMessage(DataChannel.Buffer buffer) {
+                String a = buffer.data.toString();
+                String b = "";
             }
         });
     }
