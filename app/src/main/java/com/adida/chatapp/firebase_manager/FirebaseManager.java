@@ -2,7 +2,10 @@ package com.adida.chatapp.firebase_manager;
 
 import android.content.Context;
 
+import com.adida.chatapp.entities.IceCandidate;
+import com.adida.chatapp.entities.SDPInfo;
 import com.adida.chatapp.entities.User;
+import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,5 +34,29 @@ public class FirebaseManager {
 
     public void setState(boolean state, Context context) {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).child(SharePref.getInstance(context).getUuid()).setValue(state);
+    }
+
+    public void sendSDP(String remoteUserID,String sdp,String firebaseKey)
+    {
+        String localUuid=SharePref.getInstance(ChatApplication.getContext()).getUuid();
+        SDPInfo sdpInfo= new SDPInfo();
+        // TODO: Set current user uuid
+        sdpInfo.uuid = localUuid;
+        sdpInfo.description = sdp;
+
+        FirebaseDatabase.getInstance().getReference(firebaseKey).child(remoteUserID).setValue(sdpInfo);
+    }
+
+    public void sendIceCandidate(String remoteUserID,int sdpMLineIndex,String sdpMid,String sdp)
+    {
+        String localUuid=SharePref.getInstance(ChatApplication.getContext()).getUuid();
+        IceCandidate iceCandidate= new IceCandidate();
+
+        iceCandidate.sdpMLineIndex=sdpMLineIndex;
+        iceCandidate.sdpMid=sdpMid;
+        iceCandidate.sdp=sdp;
+        iceCandidate.uuid=localUuid;
+
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.IceCandidates).child(remoteUserID).setValue(iceCandidate);
     }
 }

@@ -5,8 +5,9 @@ public class FirebaseKeys {
 
     public static String profile = "users";
     public static String state = "state";
-    public static String SDPOffer = "SDPOffer";
-    public static String SDPAnswer = "SDPAnswer";
+    public static String SDPOffers = "SDPOffers";
+    public static String SDPAnswers = "SDPAnswers";
+    public static String IceCandidates = "IceCandidates";
     public static String block = "block";
     public static String mute = "mute";
 }
