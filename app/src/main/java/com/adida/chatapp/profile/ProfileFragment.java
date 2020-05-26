@@ -20,6 +20,7 @@ import com.adida.chatapp.R;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
+import com.adida.chatapp.login.LoginPage;
 import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.sharepref.SharePref;
 import com.adida.chatapp.statistic.StatisticPage;
@@ -129,6 +130,15 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 didTapDoneButton();
+            }
+        });
+        btnSignout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseManager.getInstance().setState(false, context);
+                Intent intent = new Intent(getActivity(), LoginPage.class);
+                SharePref.getInstance(context).setUuid(null);
+                startActivity(intent);
             }
         });
     }
