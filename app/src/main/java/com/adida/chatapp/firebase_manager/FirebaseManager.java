@@ -1,7 +1,6 @@
 package com.adida.chatapp.firebase_manager;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +16,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseManager {
     private static FirebaseManager instance;
@@ -35,8 +33,6 @@ public class FirebaseManager {
         user.email = email;
         user.uuid = SharePref.getInstance(context).getUuid();
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(SharePref.getInstance(context).getUuid()).setValue(user);
-
-        addListenEvent();
     }
 
     public void updateUser(User user, Context context) {
@@ -46,6 +42,7 @@ public class FirebaseManager {
 
     public void setState(boolean state, Context context) {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).child(SharePref.getInstance(context).getUuid()).setValue(state);
+        addListenEvent();
     }
 
     public void sendSDP(String remoteUserID,String sdp,String firebaseKey)
@@ -77,12 +74,14 @@ public class FirebaseManager {
 
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers);
         //TODO: Receive offer & ice-server
+
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final SDPInfo sdpInfo = dataSnapshot.getValue(SDPInfo.class);
                 RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
                 wrapper.receiveOffer(sdpInfo.description);
+                FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).removeValue();
             }
 
             @Override
@@ -112,6 +111,7 @@ public class FirebaseManager {
                 final IceCandidate iceCandidate = dataSnapshot.getValue(IceCandidate.class);
                 RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(iceCandidate.uuid);
                 wrapper.receiveIceCandidate(iceCandidate.sdpMLineIndex,iceCandidate.sdpMid,iceCandidate.sdp);
+                FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).removeValue();
             }
 
             @Override
@@ -142,6 +142,7 @@ public class FirebaseManager {
                 final SDPInfo sdpInfo = dataSnapshot.getValue(SDPInfo.class);
                 RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
                 wrapper.receiveAnswer(sdpInfo.description);
+                FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).removeValue();
             }
 
             @Override

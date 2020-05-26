@@ -19,6 +19,7 @@ import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.search.CustomRowCell;
+import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -92,8 +93,11 @@ public class HomeFragment extends Fragment {
                     user.name = data.get("name");
                     user.phone = data.get("phone");
                     user.uuid = data.get("uuid");
-                    list.add(user);
-
+                    String uuid = SharePref.getInstance(context).getUuid();
+                    boolean res = user.uuid.equals(uuid);
+                    if(!res) {
+                        list.add(user);
+                    }
                 }
                 data = list;
                 customRowCell = new CustomRowCell(context, data);
