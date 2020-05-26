@@ -49,7 +49,7 @@ public class LoginPage extends AppCompatActivity {
         signupIntent = new Intent(this, SignupPage.class);
 
         intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+
         this.setup();
 
     }

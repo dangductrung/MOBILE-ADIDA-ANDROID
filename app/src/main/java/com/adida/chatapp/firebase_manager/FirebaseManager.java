@@ -21,6 +21,7 @@ public class FirebaseManager {
     public void createNewUser(String email, Context context) {
         User user = new User();
         user.email = email;
+        user.uuid = SharePref.getInstance(context).getUuid();
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(SharePref.getInstance(context).getUuid()).setValue(user);
     }
 
