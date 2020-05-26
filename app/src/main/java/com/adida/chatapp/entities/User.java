@@ -1,5 +1,6 @@
 package com.adida.chatapp.entities;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
@@ -10,11 +11,14 @@ public class User {
     public String countChatMessage;
     public String countCreateConnection;
 
+    @Exclude
+    private String uuid;
     // Default constructor required for calls to
     // DataSnapshot.getValue(User.class)
     public User() {
         name = "";
         phone = "";
+        email = "";
         email = "";
         countChatMessage = "0";
         countCreateConnection = "0";
@@ -26,5 +30,13 @@ public class User {
         this.email = email;
         this.countChatMessage = countChatMessage;
         this.countCreateConnection = countCreateConnection;
+    }
+
+    public void setUuid(String uuid){
+        this.uuid= uuid;
+    }
+
+    public String getUuid(){
+        return uuid;
     }
 }
