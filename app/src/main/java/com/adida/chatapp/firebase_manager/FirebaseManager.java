@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adida.chatapp.entities.IceCandidate;
+import com.adida.chatapp.entities.Report;
 import com.adida.chatapp.entities.SDPInfo;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.extendapplication.ChatApplication;
@@ -67,6 +68,10 @@ public class FirebaseManager {
         iceCandidate.uuid=localUuid;
 
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.IceCandidates).child(remoteUserID).child(localUuid).setValue(iceCandidate);
+    }
+
+    public void sendReport(Report report,  Context context) {
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.report).child(SharePref.getInstance(context).getUuid()).setValue(report);
     }
 
     void addListenEvent() {

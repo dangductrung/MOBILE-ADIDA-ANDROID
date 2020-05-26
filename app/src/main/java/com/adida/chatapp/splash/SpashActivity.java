@@ -7,9 +7,7 @@ import android.os.SystemClock;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.adida.chatapp.MainActivity;
 import com.adida.chatapp.login.LoginPage;
-import com.adida.chatapp.report.ReportActivity;
 
 public class SpashActivity extends AppCompatActivity {
 
