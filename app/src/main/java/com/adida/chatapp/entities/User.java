@@ -12,8 +12,6 @@ public class User {
     public String countChatMessage;
     public String countCreateConnection;
 
-    @Exclude
-    private String uuid;
     // Default constructor required for calls to
     // DataSnapshot.getValue(User.class)
     public User() {
@@ -33,13 +31,5 @@ public class User {
         this.email = email;
         this.countChatMessage = countChatMessage;
         this.countCreateConnection = countCreateConnection;
-    }
-
-    public void setUuid(String uuid){
-        this.uuid= uuid;
-    }
-
-    public String getUuid(){
-        return uuid;
     }
 }

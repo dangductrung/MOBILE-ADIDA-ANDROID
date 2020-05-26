@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
@@ -114,6 +116,16 @@ public class HomeFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_home, null);
         getUserList();
         this.listView = (ListView) layout.findViewById(R.id.listContactView);
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position>=0 && data.size() >0){
+                    User clickedUser=data.get(position);
+                    DefaultMessagesActivity.open(context,clickedUser);
+                }
+            }
+        });
 
         return layout;
     }

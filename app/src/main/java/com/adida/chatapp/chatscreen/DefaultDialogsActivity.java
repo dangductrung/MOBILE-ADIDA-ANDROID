@@ -70,7 +70,7 @@ public class DefaultDialogsActivity extends DemoDialogsActivity {
 
     @Override
     public void onDialogClick(Dialog dialog) {
-        DefaultMessagesActivity.open(this);
+        //DefaultMessagesActivity.open(this);
     }
 
     private void initAdapter() {

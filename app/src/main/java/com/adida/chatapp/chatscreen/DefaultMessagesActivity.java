@@ -16,20 +16,25 @@ import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
+import com.adida.chatapp.entities.User;
+
 public class DefaultMessagesActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageInput.TypingListener {
 
-    public static void open(Context context) {
-        context.startActivity(new Intent(context, DefaultMessagesActivity.class));
-        RTCPeerConnectionWrapper wrapper= new RTCPeerConnectionWrapper("user2",context);
+    public static void open(Context context,User user) {
+        Intent actMessages = new Intent(context, DefaultMessagesActivity.class);
+        actMessages.putExtra("remoteUserId",user.uuid);
+        context.startActivity(actMessages);
+        RTCPeerConnectionWrapper wrapper= new RTCPeerConnectionWrapper(user.uuid,context);
         wrapper.StartDataChannel();
-        ChatApplication.getInstance().getUserPeerConnections().put("user2",wrapper);
+        ChatApplication.getInstance().getUserPeerConnections().put(user.uuid,wrapper);
         wrapper.createOffer();
     }
 
     private MessagesList messagesList;
+    private String remoteUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,13 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         input.setInputListener(this);
         input.setTypingListener(this);
         input.setAttachmentsListener(this);
+
+        Bundle b = getIntent().getExtras();
+        String extrasUserId=b.getString("remoteUserId");
+
+        if(extrasUserId!=null && !extrasUserId.isEmpty()){
+            remoteUserId= extrasUserId;
+        }
     }
 
     @Override
