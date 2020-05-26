@@ -1,13 +1,8 @@
 package com.adida.chatapp.login;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,10 +11,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.adida.chatapp.R;
-import com.adida.chatapp.stringhelper.StringHelper;
-import com.adida.chatapp.stringkeys.StringKeys;
+import com.adida.chatapp.firebase_manager.FirebaseManager;
+import com.adida.chatapp.main.MainActivity;
+import com.adida.chatapp.sharepref.SharePref;
 import com.adida.chatapp.signup.SignupPage;
+import com.adida.chatapp.stringhelper.StringHelper;
+import com.adida.chatapp.keys.StringKeys;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,7 +34,7 @@ public class LoginPage extends AppCompatActivity {
     TextView errorMessage, errorPassword;
     Intent signupIntent;
     FirebaseAuth mAuth;
-
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +48,16 @@ public class LoginPage extends AppCompatActivity {
         errorPassword = (TextView) findViewById(R.id.errorPasswordMessage);
 
         signupIntent = new Intent(this, SignupPage.class);
-
+        intent = new Intent(this, MainActivity.class);
         this.setup();
+        onFlow();
+    }
+
+    void onFlow() {
+        String a = SharePref.getInstance(getApplicationContext()).getUuid();
+        if (!(SharePref.getInstance(getApplicationContext()).getUuid() == null)) {
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -83,6 +93,8 @@ public class LoginPage extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
                     saveId(user.getUid());
+                    FirebaseManager.getInstance().setState(true, getApplicationContext());
+                    startActivity(intent);
                 } else {
                     signInFail();
                     Toast.makeText(LoginPage.this, "Authentication failed", Toast.LENGTH_SHORT).show();

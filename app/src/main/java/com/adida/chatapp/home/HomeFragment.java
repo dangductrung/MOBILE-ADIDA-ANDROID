@@ -1,13 +1,33 @@
 package com.adida.chatapp.home;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
+import com.adida.chatapp.entities.User;
+import com.adida.chatapp.keys.FirebaseKeys;
+import com.adida.chatapp.main.MainActivity;
+import com.adida.chatapp.search.CustomRowCell;
+import com.adida.chatapp.sharepref.SharePref;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -16,14 +36,13 @@ import com.adida.chatapp.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    MainActivity main;
+    Context context = null;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ListView listView;
+    private CustomRowCell customRowCell;
+    ProgressDialog progressDialog;
+    private ArrayList<User> data = new ArrayList<User>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,26 +59,83 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        try {
+            context = getActivity(); // use this reference to invoke main callbacks
+            main = (MainActivity) getActivity();
         }
+        catch (IllegalStateException e) {
+            throw new IllegalStateException("MainActivity must implement callbacks");
+        }
+    }
+
+    private void getUserList() {
+        progressDialog = ProgressDialog.show(context, "","Loading...");
+
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                data.clear();
+                HashMap<String, Boolean> state = (HashMap<String, Boolean>) dataSnapshot.getValue();
+                for (Iterator<String> it = state.keySet().iterator(); it.hasNext(); ) {
+                    String uuid = it.next();
+                    if (state.get(uuid).booleanValue() == true) {
+                        FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(uuid).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                User user = dataSnapshot.getValue(User.class);
+                                if (!user.uuid.equals(SharePref.getInstance(context).getUuid())) {
+                                    data.add(user);
+                                }
+
+                                customRowCell = new CustomRowCell(context, data);
+
+                                listView.setAdapter(customRowCell);
+                                progressDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_home, null);
+        getUserList();
+        this.listView = (ListView) layout.findViewById(R.id.listContactView);
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position>=0 && data.size() >0){
+                    User clickedUser=data.get(position);
+                    DefaultMessagesActivity.open(context,clickedUser);
+                }
+            }
+        });
+
+        return layout;
     }
 }

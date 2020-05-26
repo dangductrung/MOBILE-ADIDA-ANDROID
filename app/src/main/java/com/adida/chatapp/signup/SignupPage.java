@@ -1,11 +1,7 @@
 package com.adida.chatapp.signup;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,10 +12,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import com.adida.chatapp.R;
-import com.adida.chatapp.stringhelper.StringHelper;
-import com.adida.chatapp.stringkeys.StringKeys;
+import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.login.LoginPage;
+import com.adida.chatapp.sharepref.SharePref;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -77,15 +76,18 @@ public class SignupPage extends Activity implements View.OnTouchListener {
     }
 
     private void registerButtonClicked() {
-        if(!checkValidate()) {
-            showInvalidEditTField();
-            return;
-        }
+//        if(!checkValidate()) {
+//            showInvalidEditTField();
+//            return;
+//        }
         mAuth.createUserWithEmailAndPassword(username.getText().toString(), password.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Log.d("", "createUserWithEmail:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    SharePref.getInstance(getApplicationContext()).setUuid(user.getUid());
+                    FirebaseManager.getInstance().createNewUser(username.getText().toString(), getApplicationContext());
                     startActivity(gotoLoginIntent);
                 } else {
                     Log.w("", "createUserWithEmail:failure", task.getException());
@@ -149,7 +151,8 @@ public class SignupPage extends Activity implements View.OnTouchListener {
     }
 
     public boolean checkValidate() {
-        return StringHelper.isEmailValid(errorMessage.getText().toString());
+//        return StringHelper.isEmailValid(errorMessage.getText().toString());
+        return false;
     }
 
     public void showInvalidEditTField() {
