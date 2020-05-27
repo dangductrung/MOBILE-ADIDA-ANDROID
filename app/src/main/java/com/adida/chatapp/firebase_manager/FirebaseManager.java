@@ -45,7 +45,7 @@ public class FirebaseManager {
     public void setState(boolean state, Context context) {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).child(SharePref.getInstance(context).getUuid()).setValue(state);
         this.context = context;
-        addListenEvent(context);
+        //addListenEvent(context);
     }
 
     public void sendSDP(String remoteUserID,String sdp,String firebaseKey)
@@ -76,7 +76,7 @@ public class FirebaseManager {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.report).child(SharePref.getInstance(context).getUuid()).setValue(report);
     }
 
-    void addListenEvent(Context context) {
+    public void addListenEvent(Context context) {
         String localUuid=SharePref.getInstance(context).getUuid();
 
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers);

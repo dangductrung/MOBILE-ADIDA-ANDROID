@@ -8,6 +8,7 @@ import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
+import com.adida.chatapp.main.MainActivity;
 
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
@@ -154,7 +155,15 @@ public class RTCPeerConnectionWrapper {
     }
 
     public void receiveDataChannelMessage(String message){
-        DefaultMessagesActivity activityDefaultMessage= (DefaultMessagesActivity) chatContext;
-        activityDefaultMessage.receiveMessage(message);
+        Context act=activityContext;
+        MainActivity mainActivity= (MainActivity)activityContext;
+        mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DefaultMessagesActivity activityDefaultMessage= (DefaultMessagesActivity) chatContext;
+                activityDefaultMessage.receiveMessage(message);
+            }
+        });
+
     }
 }

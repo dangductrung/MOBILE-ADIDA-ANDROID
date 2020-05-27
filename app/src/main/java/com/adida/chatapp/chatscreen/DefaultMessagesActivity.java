@@ -76,7 +76,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     }
 
     public void receiveMessage(String message){
-        super.messagesAdapter.addToStart(new Message(remoteUserId,MessagesFixtures.getUser(),message), true);
+        super.messagesAdapter.addToStart(new Message(remoteUserId,MessagesFixtures.getUser("1"),message), true);
     }
 
     @Override
