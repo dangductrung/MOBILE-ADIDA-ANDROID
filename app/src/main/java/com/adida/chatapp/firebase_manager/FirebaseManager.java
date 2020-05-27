@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseManager {
     private static FirebaseManager instance;
+    private Context context;
     public static FirebaseManager getInstance() {
         if (instance == null) {
             instance = new FirebaseManager();
@@ -43,12 +44,13 @@ public class FirebaseManager {
 
     public void setState(boolean state, Context context) {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).child(SharePref.getInstance(context).getUuid()).setValue(state);
-        addListenEvent();
+        this.context = context;
+        //addListenEvent(context);
     }
 
     public void sendSDP(String remoteUserID,String sdp,String firebaseKey)
     {
-        String localUuid=SharePref.getInstance(ChatApplication.getContext()).getUuid();
+        String localUuid=SharePref.getInstance(context).getUuid();
         SDPInfo sdpInfo= new SDPInfo();
         // TODO: Set current user uuid
         sdpInfo.uuid = localUuid;
@@ -59,7 +61,7 @@ public class FirebaseManager {
 
     public void sendIceCandidate(String remoteUserID,int sdpMLineIndex,String sdpMid,String sdp)
     {
-        String localUuid=SharePref.getInstance(ChatApplication.getContext()).getUuid();
+        String localUuid=SharePref.getInstance(context).getUuid();
         IceCandidate iceCandidate= new IceCandidate();
 
         iceCandidate.sdpMLineIndex=sdpMLineIndex;
@@ -74,8 +76,8 @@ public class FirebaseManager {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.report).child(SharePref.getInstance(context).getUuid()).setValue(report);
     }
 
-    void addListenEvent() {
-        String localUuid=SharePref.getInstance(ChatApplication.getContext()).getUuid();
+    public void addListenEvent(Context context) {
+        String localUuid=SharePref.getInstance(context).getUuid();
 
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers);
         //TODO: Receive offer & ice-server
@@ -84,9 +86,15 @@ public class FirebaseManager {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final SDPInfo sdpInfo = dataSnapshot.getValue(SDPInfo.class);
-                RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
-                wrapper.receiveOffer(sdpInfo.description);
                 FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).removeValue();
+                if ( ChatApplication.getInstance().getUserPeerConnections() != null && ChatApplication.getInstance().getUserPeerConnections().containsKey(sdpInfo.uuid)) {
+                    RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
+                    wrapper.receiveOffer(sdpInfo.description);
+                } else{
+                    RTCPeerConnectionWrapper wrapper = new RTCPeerConnectionWrapper(sdpInfo.uuid,context);
+                    ChatApplication.getInstance().getUserPeerConnections().put(sdpInfo.uuid,wrapper);
+                    wrapper.receiveOffer(sdpInfo.description);
+                }
             }
 
             @Override
@@ -110,13 +118,21 @@ public class FirebaseManager {
             }
         });
 
+
+
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.IceCandidates).child(localUuid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final IceCandidate iceCandidate = dataSnapshot.getValue(IceCandidate.class);
-                RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(iceCandidate.uuid);
-                wrapper.receiveIceCandidate(iceCandidate.sdpMLineIndex,iceCandidate.sdpMid,iceCandidate.sdp);
-                FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).removeValue();
+                FirebaseDatabase.getInstance().getReference(FirebaseKeys.IceCandidates).child(localUuid).removeValue();
+                if (ChatApplication.getInstance().getUserPeerConnections() != null && ChatApplication.getInstance().getUserPeerConnections().containsKey(iceCandidate.uuid)) {
+                    RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(iceCandidate.uuid);
+                    wrapper.receiveIceCandidate(iceCandidate.sdpMLineIndex,iceCandidate.sdpMid,iceCandidate.sdp);
+                }else{
+                    RTCPeerConnectionWrapper wrapper = new RTCPeerConnectionWrapper(iceCandidate.uuid,context);
+                    ChatApplication.getInstance().getUserPeerConnections().put(iceCandidate.uuid,wrapper);
+                    wrapper.receiveIceCandidate(iceCandidate.sdpMLineIndex,iceCandidate.sdpMid,iceCandidate.sdp);
+                }
             }
 
             @Override
@@ -145,9 +161,16 @@ public class FirebaseManager {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final SDPInfo sdpInfo = dataSnapshot.getValue(SDPInfo.class);
-                RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
-                wrapper.receiveAnswer(sdpInfo.description);
-                FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).removeValue();
+                FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPAnswers).child(localUuid).removeValue();
+                if (ChatApplication.getInstance().getUserPeerConnections() != null && ChatApplication.getInstance().getUserPeerConnections().containsKey(sdpInfo.uuid)) {
+                    RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
+                    wrapper.receiveAnswer(sdpInfo.description);
+                }else{
+                    RTCPeerConnectionWrapper wrapper = new RTCPeerConnectionWrapper(sdpInfo.uuid,context);
+                    ChatApplication.getInstance().getUserPeerConnections().put(sdpInfo.uuid,wrapper);
+                    wrapper.receiveAnswer(sdpInfo.description);
+                }
+
             }
 
             @Override

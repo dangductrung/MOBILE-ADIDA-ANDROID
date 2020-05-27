@@ -18,6 +18,8 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import com.adida.chatapp.entities.User;
 
+import java.util.HashMap;
+
 public class DefaultMessagesActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
@@ -27,10 +29,12 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         Intent actMessages = new Intent(context, DefaultMessagesActivity.class);
         actMessages.putExtra("remoteUserId",user.uuid);
         context.startActivity(actMessages);
-        RTCPeerConnectionWrapper wrapper= new RTCPeerConnectionWrapper(user.uuid,context);
-        wrapper.StartDataChannel();
-        ChatApplication.getInstance().getUserPeerConnections().put(user.uuid,wrapper);
-        wrapper.createOffer();
+        if(!ChatApplication.getInstance().getUserPeerConnections().containsKey(user.uuid)){
+            RTCPeerConnectionWrapper wrapper= new RTCPeerConnectionWrapper(user.uuid,context);
+            wrapper.StartDataChannel();
+            ChatApplication.getInstance().getUserPeerConnections().put(user.uuid,wrapper);
+            wrapper.createOffer();
+        }
     }
 
     private MessagesList messagesList;
@@ -54,6 +58,8 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
 
         if(extrasUserId!=null && !extrasUserId.isEmpty()){
             remoteUserId= extrasUserId;
+            RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId);
+            wrapper.setChatContext(this);
         }
     }
 
@@ -61,7 +67,16 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     public boolean onSubmit(CharSequence input) {
         super.messagesAdapter.addToStart(
                 MessagesFixtures.getTextMessage(input.toString()), true);
+
+        HashMap<String,RTCPeerConnectionWrapper> a=ChatApplication.getInstance().getUserPeerConnections();
+
+        Log.d("123",ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId).getConnectionState());
+        ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId).sendDataChannelMessage(input.toString());
         return true;
+    }
+
+    public void receiveMessage(String message){
+        super.messagesAdapter.addToStart(new Message(remoteUserId,MessagesFixtures.getUser("1"),message), true);
     }
 
     @Override

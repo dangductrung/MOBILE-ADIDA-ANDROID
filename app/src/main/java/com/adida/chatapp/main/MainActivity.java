@@ -9,6 +9,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.adida.chatapp.R;
 import com.adida.chatapp.extendapplication.ChatApplication;
+import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
         ChatApplication.initPeerConnectionFactory(getApplicationContext());
+
+        FirebaseManager.getInstance().addListenEvent(this);
 
     }
 }
