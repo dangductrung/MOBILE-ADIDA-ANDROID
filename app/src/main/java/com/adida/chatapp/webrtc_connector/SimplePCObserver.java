@@ -1,5 +1,7 @@
 package com.adida.chatapp.webrtc_connector;
 
+import android.util.Log;
+
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaStream;
@@ -54,6 +56,7 @@ public class SimplePCObserver {
 
             @Override
             public void onDataChannel(DataChannel dataChannel) {
+                rtcPeerConnectionWrapper.setDataChannel(dataChannel);
                 dataChannel.registerObserver(new DataChannel.Observer() {
                     @Override
                     public void onBufferedAmountChange(long l) {
@@ -72,7 +75,9 @@ public class SimplePCObserver {
                         data.get(bytes);
                         final String command = new String(bytes);
 
+                        rtcPeerConnectionWrapper.receiveDataChannelMessage(command);
                         //Update UI
+                        Log.d("receive message", command);
 
                     }
                 });

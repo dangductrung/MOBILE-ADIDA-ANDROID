@@ -1,11 +1,14 @@
 package com.adida.chatapp.webrtc_connector;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
+import com.adida.chatapp.main.MainActivity;
 
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
@@ -26,6 +29,7 @@ public class RTCPeerConnectionWrapper {
     private DataChannel dataChannel;
 
     private Context activityContext;
+    private Context chatContext;
 
     public  RTCPeerConnectionWrapper(String remoteUserID, Context activityContext){
         this.remoteUserID=remoteUserID;
@@ -34,6 +38,14 @@ public class RTCPeerConnectionWrapper {
         peerConnection= ChatApplication.getInstance()
                 .getPeerConnectionFactory()
                 .createPeerConnection(getIceServers(),SimplePCObserver.getPCObserver(this));
+    }
+
+    public String getConnectionState(){
+        return peerConnection.connectionState().name();
+    }
+
+    public void setChatContext(Context context){
+        chatContext=context;
     }
 
     public void StartStreaming(VideoTrack cameraVideoTrack){
@@ -55,12 +67,25 @@ public class RTCPeerConnectionWrapper {
 
             @Override
             public void onMessage(DataChannel.Buffer buffer) {
+                ByteBuffer data = buffer.data;
+                byte[] bytes = new byte[data.remaining()];
+                data.get(bytes);
+                final String command = new String(bytes);
+
+                receiveDataChannelMessage(command);
+                //Update UI
+                Log.d("receive message", command);
             }
         });
     }
 
+    public void setDataChannel(DataChannel dataChannel){
+        this.dataChannel=dataChannel;
+    }
+
     public void sendDataChannelMessage(String message){
-        ByteBuffer data = Utils.stringToByteBuffer("-s" + message, Charset.defaultCharset());
+        ByteBuffer data = Utils.stringToByteBuffer(message, Charset.defaultCharset());
+        Log.d("send message", "sendDataChannelMessage: ");
         dataChannel.send(new DataChannel.Buffer(data, false));
     }
 
@@ -127,5 +152,18 @@ public class RTCPeerConnectionWrapper {
         iceServers.add(PeerConnection.IceServer.builder("stun:stun2.l.google.com:19302").createIceServer());
 
         return iceServers;
+    }
+
+    public void receiveDataChannelMessage(String message){
+        Context act=activityContext;
+        MainActivity mainActivity= (MainActivity)activityContext;
+        mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DefaultMessagesActivity activityDefaultMessage= (DefaultMessagesActivity) chatContext;
+                activityDefaultMessage.receiveMessage(message);
+            }
+        });
+
     }
 }

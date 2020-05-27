@@ -22,6 +22,7 @@ import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.login.LoginPage;
 import com.adida.chatapp.main.MainActivity;
+import com.adida.chatapp.report.ReportActivity;
 import com.adida.chatapp.sharepref.SharePref;
 import com.adida.chatapp.statistic.StatisticPage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,7 +47,7 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    Button btnEditButtonText, btnStatistic, btnSignout;
+    Button btnEditButtonText, btnStatistic, btnSignout, btnReport;
     ImageButton btnEditButtonImage;
     EditText txtProfileName, txtProfilePhone;
     ProgressDialog progressDialog;
@@ -97,6 +98,7 @@ public class ProfileFragment extends Fragment {
         btnEditButtonText = (Button) layout.findViewById(R.id.btnEditButtonText);
         btnStatistic = (Button) layout.findViewById(R.id.btnStatistic);
         btnSignout = (Button) layout.findViewById(R.id.btnSignout);
+        btnReport = (Button) layout.findViewById(R.id.btnReport);
 
         email = (TextView) layout.findViewById(R.id.userEmail);
         btnEditButtonImage.setVisibility(View.VISIBLE);
@@ -138,6 +140,13 @@ public class ProfileFragment extends Fragment {
                 FirebaseManager.getInstance().setState(false, context);
                 Intent intent = new Intent(getActivity(), LoginPage.class);
                 SharePref.getInstance(context).setUuid(null);
+                startActivity(intent);
+            }
+        });
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ReportActivity.class);
                 startActivity(intent);
             }
         });

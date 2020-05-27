@@ -22,7 +22,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".signup.SignupPage" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".main.MainActivity" />
+        <activity android:name=".chatscreen.DefaultMessagesActivity" />
+        <activity android:name=".chatscreen.DefaultDialogsActivity" />
+        <activity android:name=".chatscreen.DemoDialogsActivity" />
+        <activity android:name=".chatscreen.DemoMessagesActivity" />
     </application>
 
 </manifest>
