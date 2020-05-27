@@ -17,7 +17,6 @@ public class ChatApplication {
 
     private static PeerConnectionFactory peerConnectionFactory;
 
-
     public static ChatApplication getInstance(){
         if (instance == null) {
             instance = new ChatApplication();

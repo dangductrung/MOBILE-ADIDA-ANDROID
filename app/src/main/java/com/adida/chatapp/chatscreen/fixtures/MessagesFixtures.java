@@ -59,7 +59,7 @@ public final class MessagesFixtures extends FixturesData {
         return messages;
     }
 
-    private static User getUser() {
+    public static User getUser() {
         boolean even = rnd.nextBoolean();
         return new User(
                 even ? "0" : "1",

@@ -118,12 +118,14 @@ public class FirebaseManager {
             }
         });
 
+
+
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.IceCandidates).child(localUuid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final IceCandidate iceCandidate = dataSnapshot.getValue(IceCandidate.class);
                 FirebaseDatabase.getInstance().getReference(FirebaseKeys.IceCandidates).child(localUuid).removeValue();
-                if (ChatApplication.getInstance().getUserPeerConnections() != null) {
+                if (ChatApplication.getInstance().getUserPeerConnections() != null && ChatApplication.getInstance().getUserPeerConnections().containsKey(iceCandidate.uuid)) {
                     RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(iceCandidate.uuid);
                     wrapper.receiveIceCandidate(iceCandidate.sdpMLineIndex,iceCandidate.sdpMid,iceCandidate.sdp);
                 }else{
