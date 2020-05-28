@@ -10,6 +10,8 @@ import com.adida.chatapp.chatscreen.fixtures.MessagesFixtures;
 import com.adida.chatapp.chatscreen.models.Message;
 import com.adida.chatapp.chatscreen.utils.AppUtils;
 import com.adida.chatapp.extendapplication.ChatApplication;
+import com.adida.chatapp.webrtc_connector.ActivityState;
+import com.adida.chatapp.webrtc_connector.PendingMessage;
 import com.adida.chatapp.webrtc_connector.RTCPeerConnectionWrapper;
 import com.adida.chatapp.R;
 import com.stfalcon.chatkit.messages.MessageInput;
@@ -33,6 +35,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
             RTCPeerConnectionWrapper wrapper= new RTCPeerConnectionWrapper(user.uuid,context);
             wrapper.StartDataChannel();
             ChatApplication.getInstance().getUserPeerConnections().put(user.uuid,wrapper);
+            wrapper.state = ActivityState.IN;
             wrapper.createOffer();
         }
     }
@@ -61,6 +64,16 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
             RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId);
             wrapper.setChatContext(this);
         }
+
+
+        if (remoteUserId.equals(PendingMessage.remoteUuid)) {
+            for (int i = 0 ; i <PendingMessage.pending.size() ; i++) {
+                super.messagesAdapter.addToStart(new Message(remoteUserId,MessagesFixtures.getUser("1"),PendingMessage.pending.get(i)), true);
+            }
+            PendingMessage.pending.clear();
+            PendingMessage.remoteUuid = "";
+        }
+
     }
 
     @Override
@@ -110,5 +123,23 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     @Override
     public void onStopTyping() {
         Log.v("Typing listener", getString(R.string.stop_typing_status));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId).state = ActivityState.IN;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId).state = ActivityState.OUT;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId).state = ActivityState.OUT;
     }
 }

@@ -76,6 +76,10 @@ public class FirebaseManager {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.report).child(SharePref.getInstance(context).getUuid()).setValue(report);
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public void addListenEvent(Context context) {
         String localUuid=SharePref.getInstance(context).getUuid();
 

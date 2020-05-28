@@ -1,14 +1,24 @@
 package com.adida.chatapp.webrtc_connector;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.adida.chatapp.R;
 import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
+import com.adida.chatapp.entities.User;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
+import com.adida.chatapp.sharepref.SharePref;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
@@ -23,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RTCPeerConnectionWrapper {
+    static int  count = 0;
     private String remoteUserID;
     private PeerConnection peerConnection;
     private SessionDescription tempOfferSessionDescription;
@@ -30,6 +41,7 @@ public class RTCPeerConnectionWrapper {
 
     private Context activityContext;
     private Context chatContext;
+    public int state;
 
     public  RTCPeerConnectionWrapper(String remoteUserID, Context activityContext){
         this.remoteUserID=remoteUserID;
@@ -84,6 +96,7 @@ public class RTCPeerConnectionWrapper {
     }
 
     public void sendDataChannelMessage(String message){
+        message = SharePref.getInstance(activityContext).getUuid() + "-" + message;
         ByteBuffer data = Utils.stringToByteBuffer(message, Charset.defaultCharset());
         Log.d("send message", "sendDataChannelMessage: ");
         dataChannel.send(new DataChannel.Buffer(data, false));
@@ -155,15 +168,55 @@ public class RTCPeerConnectionWrapper {
     }
 
     public void receiveDataChannelMessage(String message){
-        Context act=activityContext;
         MainActivity mainActivity= (MainActivity)activityContext;
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                String [] tokens = message.split("-");
+
                 DefaultMessagesActivity activityDefaultMessage= (DefaultMessagesActivity) chatContext;
-                activityDefaultMessage.receiveMessage(message);
+                activityDefaultMessage.receiveMessage(tokens[1]);
+
+                if (state == ActivityState.OUT) {
+                    getUserInfo(tokens[0],tokens[1]);
+                }
             }
         });
 
+    }
+
+    private void getUserInfo(String uuid, String message) {
+        if (!PendingMessage.remoteUuid.equals(uuid)) {
+            PendingMessage.remoteUuid = uuid;
+            PendingMessage.pending.clear();
+        }
+
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(uuid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user =dataSnapshot.getValue(User.class);
+                PendingMessage.pending.add(message);
+                pushNotification("Message from "+ user.email, message);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private  void pushNotification(String title,String message) {
+        // TODO: Notification
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(activityContext,"001")
+                .setSmallIcon(R.drawable.vichat_icon_origin)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(activityContext);
+        notificationManager.notify(count, mBuilder.build());
+        count += 1;
     }
 }
