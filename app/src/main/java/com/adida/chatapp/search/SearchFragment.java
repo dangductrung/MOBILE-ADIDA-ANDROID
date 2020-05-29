@@ -2,7 +2,9 @@ package com.adida.chatapp.search;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -39,7 +42,7 @@ public class SearchFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private CustomRowCell customRowCell;
+    private SearchResultRowCell customRowCell;
     SearchView srcSearchView;
     ListView listSearchView;
     ProgressDialog progressDialog;
@@ -107,6 +110,9 @@ public class SearchFragment extends Fragment {
         return layout;
     }
 
+
+    List<String> blockedIds = null;
+    boolean[] isBlockList = null;
     private void getUserList() {
         progressDialog = ProgressDialog.show(context, "","Loading...");
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).addValueEventListener(new ValueEventListener() {
@@ -125,7 +131,9 @@ public class SearchFragment extends Fragment {
                                     data.add(user);
                                 }
 
-                                customRowCell = new CustomRowCell(context, data);
+                                // pass isblocklist
+                                isBlockList = new boolean[data.size()];
+                                customRowCell = new SearchResultRowCell(context, data, isBlockList);
 
                                 listSearchView.setAdapter(customRowCell);
                                 progressDialog.dismiss();
@@ -138,6 +146,55 @@ public class SearchFragment extends Fragment {
                         });
                     }
                 }
+
+                // data is now a list of active users
+                // get list of blocked users
+                FirebaseDatabase.getInstance()
+                        .getReference(FirebaseKeys.block)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.e("QT SearchFragment", "on data change");
+
+                                // get blocked list
+                                String myId = SharePref.getInstance(context).getUuid();
+                                blockedIds = null;
+                                for(DataSnapshot item : dataSnapshot.getChildren()){
+                                    if(item.getKey().toString().equals(myId)){
+                                        Log.e("QT SearchFragment", "found me");
+
+                                        blockedIds = (ArrayList<String>)item.getValue();
+                                        break;
+                                    }
+                                }
+
+
+                                if(blockedIds != null) {
+
+                                    isBlockList = new boolean[data.size()];
+
+                                    // loop all active users
+                                    for(int i = 0; i < data.size(); i++){
+
+                                        // if active user is in blocked list
+                                        if(blockedIds.contains(data.get(i).uuid)){
+                                            isBlockList[i] = true;
+                                        }
+                                    }
+
+                                    // refresh listview to update blocked users
+                                    customRowCell = new SearchResultRowCell(context, data, isBlockList);
+                                    listSearchView.setAdapter(customRowCell);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("QT SearchFragment", "onCancelled");
+                            }
+                        });
+
             }
 
             @Override
