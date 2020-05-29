@@ -14,6 +14,7 @@ import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
+import com.adida.chatapp.message.PendingMessage;
 import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -185,18 +186,16 @@ public class RTCPeerConnectionWrapper {
 
     }
 
-    private void getUserInfo(String uuid, String message) {
-        if (!PendingMessage.remoteUuid.equals(uuid)) {
-            PendingMessage.remoteUuid = uuid;
-            PendingMessage.pending.clear();
-        }
-
+    private void getUserInfo(String uuid, String sendingMessage) {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(uuid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user =dataSnapshot.getValue(User.class);
-                PendingMessage.pending.add(message);
-                pushNotification("Message from "+ user.email, message);
+                PendingMessage message = new PendingMessage();
+                message.message = sendingMessage;
+                message.sender = uuid;
+                PendingMessageManager.pending.add(message);
+                pushNotification("Message from "+ user.email, sendingMessage);
             }
 
             @Override

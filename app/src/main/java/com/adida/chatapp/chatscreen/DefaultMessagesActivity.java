@@ -6,19 +6,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.adida.chatapp.R;
 import com.adida.chatapp.chatscreen.fixtures.MessagesFixtures;
 import com.adida.chatapp.chatscreen.models.Message;
 import com.adida.chatapp.chatscreen.utils.AppUtils;
+import com.adida.chatapp.entities.User;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.webrtc_connector.ActivityState;
-import com.adida.chatapp.webrtc_connector.PendingMessage;
+import com.adida.chatapp.webrtc_connector.PendingMessageManager;
 import com.adida.chatapp.webrtc_connector.RTCPeerConnectionWrapper;
-import com.adida.chatapp.R;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
-
-import com.adida.chatapp.entities.User;
 
 import java.util.HashMap;
 
@@ -65,15 +64,20 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
             wrapper.setChatContext(this);
         }
 
+        loadPendingMessage();
+    }
 
-        if (remoteUserId.equals(PendingMessage.remoteUuid)) {
-            for (int i = 0 ; i <PendingMessage.pending.size() ; i++) {
-                super.messagesAdapter.addToStart(new Message(remoteUserId,MessagesFixtures.getUser("1"),PendingMessage.pending.get(i)), true);
+
+    public void loadPendingMessage() {
+        for(int i =0 ;i< PendingMessageManager.pending.size() ; ++i) {
+            if (remoteUserId.equals(PendingMessageManager.pending.get(i).sender)) {
+                super.messagesAdapter.addToStart(new Message(remoteUserId,MessagesFixtures.getUser("1"), PendingMessageManager.pending.get(i).message), true);
+                PendingMessageManager.pending.remove(i);
+                if (i>0) {
+                    i-=1;
+                }
             }
-            PendingMessage.pending.clear();
-            PendingMessage.remoteUuid = "";
         }
-
     }
 
     @Override
