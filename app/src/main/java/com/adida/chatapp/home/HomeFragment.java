@@ -3,6 +3,7 @@ package com.adida.chatapp.home;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.search.CustomRowCell;
+import com.adida.chatapp.search.SearchResultRowCell;
 import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -73,7 +76,7 @@ public class HomeFragment extends Fragment {
             throw new IllegalStateException("MainActivity must implement callbacks");
         }
     }
-
+    List<String> addIds = null;
     private void getUserList() {
         progressDialog = ProgressDialog.show(context, "","Loading...");
 
@@ -93,10 +96,10 @@ public class HomeFragment extends Fragment {
                                     data.add(user);
                                 }
 
-                                customRowCell = new CustomRowCell(context, data);
+                                //customRowCell = new CustomRowCell(context, data);
 
-                                listView.setAdapter(customRowCell);
-                                progressDialog.dismiss();
+                                //listView.setAdapter(customRowCell);
+                                //progressDialog.dismiss();
                             }
 
                             @Override
@@ -106,6 +109,48 @@ public class HomeFragment extends Fragment {
                         });
                     }
                 }
+                // Add list
+                FirebaseDatabase.getInstance()
+                        .getReference(FirebaseKeys.add)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.e("QT SearchFragment", "on data change");
+
+                                // get add list
+                                String myId = SharePref.getInstance(context).getUuid();
+                                addIds = null;
+                                for(DataSnapshot item : dataSnapshot.getChildren()){
+                                    if(item.getKey().toString().equals(myId)){
+                                        Log.e("QT SearchFragment", "found me");
+
+                                        addIds = (ArrayList<String>)item.getValue();
+                                        break;
+                                    }
+                                }
+
+                                ArrayList<User> dataToSearch = new ArrayList<User>();
+                                for (int i = 0;i< data.size(); i++){
+                                    if (addIds != null) {
+                                        if (addIds.contains(data.get(i).uuid)) {
+                                            dataToSearch.add(data.get(i));
+                                        }
+                                    } else {
+                                        dataToSearch.add(data.get(i));
+                                    }
+                                }
+                                customRowCell = new CustomRowCell(context, dataToSearch);
+
+                                listView.setAdapter(customRowCell);
+                                progressDialog.dismiss();
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("QT SearchFragment", "onCancelled");
+                            }
+                        });
             }
 
             @Override
