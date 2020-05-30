@@ -2,7 +2,9 @@ package com.adida.chatapp.search;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,20 +28,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment{
     MainActivity main;
     Context context = null;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private CustomRowCell customRowCell;
+    private SearchResultRowCell customRowCell;
     SearchView srcSearchView;
     ListView listSearchView;
     ProgressDialog progressDialog;
@@ -107,6 +104,10 @@ public class SearchFragment extends Fragment {
         return layout;
     }
 
+
+    List<String> blockedIds = null;
+    boolean[] isBlockList = null;
+    List<String> addIds = null;
     private void getUserList() {
         progressDialog = ProgressDialog.show(context, "","Loading...");
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).addValueEventListener(new ValueEventListener() {
@@ -124,11 +125,6 @@ public class SearchFragment extends Fragment {
                                 if (!user.uuid.equals(SharePref.getInstance(context).getUuid())) {
                                     data.add(user);
                                 }
-
-                                customRowCell = new CustomRowCell(context, data);
-
-                                listSearchView.setAdapter(customRowCell);
-                                progressDialog.dismiss();
                             }
 
                             @Override
@@ -138,6 +134,89 @@ public class SearchFragment extends Fragment {
                         });
                     }
                 }
+
+                // data is now a list of active users
+                // get list of blocked users
+                FirebaseDatabase.getInstance()
+                        .getReference(FirebaseKeys.block)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.e("QT SearchFragment", "on data change");
+
+                                // get blocked list
+                                String myId = SharePref.getInstance(context).getUuid();
+                                blockedIds = null;
+                                for(DataSnapshot item : dataSnapshot.getChildren()){
+                                    if(item.getKey().toString().equals(myId)){
+                                        Log.e("QT SearchFragment", "found me");
+
+                                        blockedIds = (ArrayList<String>)item.getValue();
+                                        break;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("QT SearchFragment", "onCancelled");
+                            }
+                        });
+
+
+                // Add list
+                FirebaseDatabase.getInstance()
+                        .getReference(FirebaseKeys.add)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.e("QT SearchFragment", "on data change");
+
+                                // get add list
+                                String myId = SharePref.getInstance(context).getUuid();
+                                addIds = null;
+                                for(DataSnapshot item : dataSnapshot.getChildren()){
+                                    if(item.getKey().toString().equals(myId)){
+                                        Log.e("QT SearchFragment", "found me");
+
+                                        addIds = (ArrayList<String>)item.getValue();
+                                        break;
+                                    }
+                                }
+
+                                ArrayList<User> dataToSearch = new ArrayList<User>();
+                                for (int i = 0;i< data.size(); i++){
+                                    if (addIds != null) {
+                                        if (!addIds.contains(data.get(i).uuid)) {
+                                            dataToSearch.add(data.get(i));
+                                        }
+                                    } else {
+                                        dataToSearch.add(data.get(i));
+                                    }
+                                }
+
+                                isBlockList = new boolean[dataToSearch.size()];
+                                if(blockedIds != null) {
+                                    // loop all active users
+                                    for(int i = 0; i < dataToSearch.size(); i++){
+                                        // if active user is in blocked list
+                                        if(blockedIds.contains(dataToSearch.get(i).uuid)){
+                                            isBlockList[i] = true;
+                                        }
+                                    }
+                                }
+                                customRowCell = new SearchResultRowCell(context, dataToSearch, isBlockList);
+                                listSearchView.setAdapter(customRowCell);
+                                customRowCell.notifyDataSetChanged();
+                                progressDialog.dismiss();
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("QT SearchFragment", "onCancelled");
+                            }
+                        });
             }
 
             @Override
@@ -145,5 +224,4 @@ public class SearchFragment extends Fragment {
 
             }
         });}
-
 }
