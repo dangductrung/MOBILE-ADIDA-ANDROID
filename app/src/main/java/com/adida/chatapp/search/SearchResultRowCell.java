@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,17 +19,13 @@ import androidx.annotation.NonNull;
 import com.adida.chatapp.R;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
-import com.adida.chatapp.keys.StringKeys;
-import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class SearchResultRowCell extends BaseAdapter implements Filterable {
@@ -37,7 +33,7 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
     private ArrayList<User> userList;
     Context mContext;
     private boolean[] isBlockList;
-
+    private boolean isBlockTap = false;
     public SearchResultRowCell(Context context, ArrayList<User> user, boolean[] isBlockList) {
         mContext = context;
         userList = user;
@@ -75,8 +71,8 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
 
         TextView name = (TextView) row.findViewById(R.id.userId);
         ImageView icon = (ImageView) row.findViewById(R.id.icon);
-        Button btnBlock = row.findViewById(R.id.btnBlock);
-        Button btnAdd = row.findViewById(R.id.btnAdd);
+        ImageButton btnBlock = (ImageButton) row.findViewById(R.id.btnBlock);
+        ImageButton btnAdd = (ImageButton) row.findViewById(R.id.btnAdd);
 
         name.setText(user.email);
         icon.setImageResource(R.drawable.main_yellow_hair);
@@ -96,7 +92,8 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
         btnBlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                didTapBlockButton(btnBlock, user, position, row);
+                isBlockTap = true;
+                checkIsBlock(btnBlock, user, position, row);
             }
         });
         return (row);
@@ -105,15 +102,15 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
     public void markUserBlocked(View v, boolean isBlock){
 
         TextView name = v.findViewById(R.id.userId);
-        Button btnBlock = v.findViewById(R.id.btnBlock);
+        ImageButton btnBlock = (ImageButton) v.findViewById(R.id.btnBlock);
 
         if(isBlock){
             name.setTextColor(Color.RED);
-            btnBlock.setText("Unblock");
+            btnBlock.setImageResource(R.drawable.ic_unclock);
         }
         else{
             name.setTextColor(Color.BLACK);
-            btnBlock.setText("Block");
+            btnBlock.setImageResource(R.drawable.ic_lock);
         }
     }
 
@@ -199,11 +196,34 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
         return anotherArray;
     }
 
-    private void didTapBlockButton(Button btnBlock, User user, int position, View row){
+    private void checkIsBlock(ImageButton btnBlock, User user, int position, View row) {
+
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.block).child(SharePref.getInstance(mContext).getUuid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!isBlockTap) {
+                    return;
+                }
+                isBlockTap = false;
+                ArrayList<String> list = (ArrayList<String>) dataSnapshot.getValue();
+                if (list != null) {
+                    boolean isBlock = list.contains(user.uuid);
+                }
+                didTapBlockButton(btnBlock, user, position, row, list == null ? true : !(list.contains(user.uuid)));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void didTapBlockButton(ImageButton btnBlock, User user, int position, View row, boolean isBlock){
+
         String myId = SharePref.getInstance(mContext).getUuid();
         Log.e("QT", "user:" + myId + "click:" + user.uuid);
 
-        boolean isBlock = btnBlock.getText().toString().equals("Block");
         Log.e("QT", "isBlock: " + isBlock);
 
         // update database
@@ -237,6 +257,7 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
                         else{
                             blockedIds.remove(user.uuid);
                         }
+
 
                         // save to database
                         FirebaseDatabase.getInstance()
@@ -287,4 +308,7 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
             notifyDataSetChanged();
         }
     };
+
 }
+
+

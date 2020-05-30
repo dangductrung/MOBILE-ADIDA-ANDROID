@@ -19,15 +19,22 @@
         android:layout_height="match_parent"
         android:layout_weight="10"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/btnAdd"
+        android:src="@drawable/ic_add"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:layout_marginRight="16dp"
         android:text="Add"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/btnBlock"
         android:layout_width="wrap_content"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_lock"
         android:layout_height="match_parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="4dp"
         android:text="Block"/>
 </LinearLayout>
