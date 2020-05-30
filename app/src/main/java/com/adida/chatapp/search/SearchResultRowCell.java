@@ -37,14 +37,12 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
     private ArrayList<User> userList;
     Context mContext;
     private boolean[] isBlockList;
-    private boolean[] isAddList;
 
-    public SearchResultRowCell(Context context, ArrayList<User> user, boolean[] isBlockList, boolean[] isAddList) {
+    public SearchResultRowCell(Context context, ArrayList<User> user, boolean[] isBlockList) {
         mContext = context;
         userList = user;
         userListFull = new ArrayList<User>(user);
         this.isBlockList = isBlockList;
-        this.isAddList = isAddList;
     }
 
     @Override
@@ -129,8 +127,6 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Log.e("QT", "on data change");
-
                             addIds = null;
                             for(DataSnapshot item : dataSnapshot.getChildren()){
                                 if(item.getKey().toString().equals(myId)){
@@ -144,7 +140,6 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
                             // show user
                             // check if exist user to be blocked
                             if(addIds == null){
-                                Log.e("QT", "empty list");
                                 addIds = new ArrayList<>();
                             }
                             // add/remove id to be blocked/unblocked
@@ -154,11 +149,13 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
                                     .getReference(FirebaseKeys.add)
                                     .child(myId)
                                     .setValue(addIds);
-                            row.setVisibility(View.INVISIBLE);
+                            userList.remove(position);
+                            isBlockList = removeTheElement(isBlockList, position);
+                            notifyDataSetChanged();
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.e("QT", "onCancelled");
+
                         }
                     });
         } else {
@@ -169,6 +166,37 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
             toast.show();
         }
 
+    }
+
+    private static boolean[] removeTheElement(boolean[] arr, int index)  {
+
+        // If the array is empty
+        // or the index is not in array range
+        // return the original array
+        if (arr == null  || index < 0  || index >= arr.length) {
+            return arr;
+        }
+
+        // Create another array of size one less
+        boolean[] anotherArray = new boolean[arr.length - 1];
+
+        // Copy the elements except the index
+        // from original array to the other array
+        for (int i = 0, k = 0; i < arr.length; i++) {
+
+            // if the index is
+            // the removal element index
+            if (i == index) {
+                continue;
+            }
+
+            // if the index is not
+            // the removal element index
+            anotherArray[k++] = arr[i];
+        }
+
+        // return the resultant array
+        return anotherArray;
     }
 
     private void didTapBlockButton(Button btnBlock, User user, int position, View row){

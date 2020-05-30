@@ -108,7 +108,6 @@ public class SearchFragment extends Fragment{
     List<String> blockedIds = null;
     boolean[] isBlockList = null;
     List<String> addIds = null;
-    boolean[] isAddList = null;
     private void getUserList() {
         progressDialog = ProgressDialog.show(context, "","Loading...");
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).addValueEventListener(new ValueEventListener() {
@@ -197,7 +196,6 @@ public class SearchFragment extends Fragment{
                                 }
 
                                 isBlockList = new boolean[dataToSearch.size()];
-                                isAddList = new boolean[dataToSearch.size()];
                                 if(blockedIds != null) {
                                     // loop all active users
                                     for(int i = 0; i < dataToSearch.size(); i++){
@@ -207,7 +205,7 @@ public class SearchFragment extends Fragment{
                                         }
                                     }
                                 }
-                                customRowCell = new SearchResultRowCell(context, dataToSearch, isBlockList, isAddList);
+                                customRowCell = new SearchResultRowCell(context, dataToSearch, isBlockList);
                                 listSearchView.setAdapter(customRowCell);
                                 customRowCell.notifyDataSetChanged();
                                 progressDialog.dismiss();

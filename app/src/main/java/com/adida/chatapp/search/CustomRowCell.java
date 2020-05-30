@@ -113,7 +113,9 @@ public class CustomRowCell extends BaseAdapter implements Filterable {
                                 .getReference(FirebaseKeys.add)
                                 .child(myId)
                                 .setValue(addIds);
-                        row.setVisibility(View.INVISIBLE);
+
+                        userList.remove(position);
+                        notifyDataSetChanged();
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
