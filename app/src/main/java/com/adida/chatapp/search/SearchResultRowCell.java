@@ -12,6 +12,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -19,6 +20,7 @@ import com.adida.chatapp.R;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.keys.StringKeys;
+import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -88,7 +90,7 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                didTapAddButton(btnAdd, user, position, row);
+                didTapAddButton(user, position, row);
             }
         });
 
@@ -117,47 +119,56 @@ public class SearchResultRowCell extends BaseAdapter implements Filterable {
         }
     }
 
-    private void didTapAddButton(Button btnAdd, User user, int position, View row){
-        String myId = SharePref.getInstance(mContext).getUuid();
-        Log.e("test", "user:" + myId + "click:" + user.uuid);
-        ArrayList<String> data = new ArrayList<>();
-        FirebaseDatabase.getInstance()
-                .getReference(FirebaseKeys.add)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Log.e("QT", "on data change");
+    private void didTapAddButton(User user, int position, View row){
+        if (isBlockList[position] != true) {
+            String myId = SharePref.getInstance(mContext).getUuid();
+            Log.e("test", "user:" + myId + "click:" + user.uuid);
+            ArrayList<String> data = new ArrayList<>();
+            FirebaseDatabase.getInstance()
+                    .getReference(FirebaseKeys.add)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Log.e("QT", "on data change");
 
-                        addIds = null;
-                        for(DataSnapshot item : dataSnapshot.getChildren()){
-                            if(item.getKey().toString().equals(myId)){
-                                Log.e("QT", "found me");
+                            addIds = null;
+                            for(DataSnapshot item : dataSnapshot.getChildren()){
+                                if(item.getKey().toString().equals(myId)){
+                                    Log.e("QT", "found me");
 
-                                addIds = (ArrayList<String>)item.getValue();
-                                break;
+                                    addIds = (ArrayList<String>)item.getValue();
+                                    break;
+                                }
                             }
-                        }
 
-                        // show user
-                        // check if exist user to be blocked
-                        if(addIds == null){
-                            Log.e("QT", "empty list");
-                            addIds = new ArrayList<>();
+                            // show user
+                            // check if exist user to be blocked
+                            if(addIds == null){
+                                Log.e("QT", "empty list");
+                                addIds = new ArrayList<>();
+                            }
+                            // add/remove id to be blocked/unblocked
+                            addIds.add(user.uuid);
+                            // save to database
+                            FirebaseDatabase.getInstance()
+                                    .getReference(FirebaseKeys.add)
+                                    .child(myId)
+                                    .setValue(addIds);
+                            row.setVisibility(View.INVISIBLE);
                         }
-                        // add/remove id to be blocked/unblocked
-                        addIds.add(user.uuid);
-                        // save to database
-                        FirebaseDatabase.getInstance()
-                                .getReference(FirebaseKeys.add)
-                                .child(myId)
-                                .setValue(addIds);
-                        row.setVisibility(View.INVISIBLE);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.e("QT", "onCancelled");
-                    }
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.e("QT", "onCancelled");
+                        }
+                    });
+        } else {
+            CharSequence text = "Unblock to add";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(mContext, text, duration);
+            toast.show();
+        }
+
     }
 
     private void didTapBlockButton(Button btnBlock, User user, int position, View row){

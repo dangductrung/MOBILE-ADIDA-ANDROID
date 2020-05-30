@@ -30,13 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment{
     MainActivity main;
     Context context = null;
 
@@ -215,7 +209,7 @@ public class SearchFragment extends Fragment {
                                 }
                                 customRowCell = new SearchResultRowCell(context, dataToSearch, isBlockList, isAddList);
                                 listSearchView.setAdapter(customRowCell);
-
+                                customRowCell.notifyDataSetChanged();
                                 progressDialog.dismiss();
 
                             }
@@ -232,5 +226,4 @@ public class SearchFragment extends Fragment {
 
             }
         });}
-
 }
