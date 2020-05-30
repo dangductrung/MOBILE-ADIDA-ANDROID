@@ -113,6 +113,8 @@ public class SearchFragment extends Fragment {
 
     List<String> blockedIds = null;
     boolean[] isBlockList = null;
+    List<String> addIds = null;
+    boolean[] isAddList = null;
     private void getUserList() {
         progressDialog = ProgressDialog.show(context, "","Loading...");
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.state).addValueEventListener(new ValueEventListener() {
@@ -130,13 +132,6 @@ public class SearchFragment extends Fragment {
                                 if (!user.uuid.equals(SharePref.getInstance(context).getUuid())) {
                                     data.add(user);
                                 }
-
-                                // pass isblocklist
-                                isBlockList = new boolean[data.size()];
-                                customRowCell = new SearchResultRowCell(context, data, isBlockList);
-
-                                listSearchView.setAdapter(customRowCell);
-                                progressDialog.dismiss();
                             }
 
                             @Override
@@ -167,26 +162,6 @@ public class SearchFragment extends Fragment {
                                         break;
                                     }
                                 }
-
-
-                                if(blockedIds != null) {
-
-                                    isBlockList = new boolean[data.size()];
-
-                                    // loop all active users
-                                    for(int i = 0; i < data.size(); i++){
-
-                                        // if active user is in blocked list
-                                        if(blockedIds.contains(data.get(i).uuid)){
-                                            isBlockList[i] = true;
-                                        }
-                                    }
-
-                                    // refresh listview to update blocked users
-                                    customRowCell = new SearchResultRowCell(context, data, isBlockList);
-                                    listSearchView.setAdapter(customRowCell);
-                                }
-
                             }
 
                             @Override
@@ -195,6 +170,61 @@ public class SearchFragment extends Fragment {
                             }
                         });
 
+
+                // Add list
+                FirebaseDatabase.getInstance()
+                        .getReference(FirebaseKeys.add)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.e("QT SearchFragment", "on data change");
+
+                                // get add list
+                                String myId = SharePref.getInstance(context).getUuid();
+                                addIds = null;
+                                for(DataSnapshot item : dataSnapshot.getChildren()){
+                                    if(item.getKey().toString().equals(myId)){
+                                        Log.e("QT SearchFragment", "found me");
+
+                                        addIds = (ArrayList<String>)item.getValue();
+                                        break;
+                                    }
+                                }
+
+                                ArrayList<User> dataToSearch = new ArrayList<User>();
+                                for (int i = 0;i< data.size(); i++){
+                                    if (addIds != null) {
+                                        if (!addIds.contains(data.get(i).uuid)) {
+                                            dataToSearch.add(data.get(i));
+                                        }
+                                    } else {
+                                        dataToSearch.add(data.get(i));
+                                    }
+                                }
+
+                                isBlockList = new boolean[dataToSearch.size()];
+                                isAddList = new boolean[dataToSearch.size()];
+                                if(blockedIds != null) {
+                                    // loop all active users
+                                    for(int i = 0; i < dataToSearch.size(); i++){
+                                        // if active user is in blocked list
+                                        if(blockedIds.contains(dataToSearch.get(i).uuid)){
+                                            isBlockList[i] = true;
+                                        }
+                                    }
+                                }
+                                customRowCell = new SearchResultRowCell(context, dataToSearch, isBlockList, isAddList);
+                                listSearchView.setAdapter(customRowCell);
+
+                                progressDialog.dismiss();
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("QT SearchFragment", "onCancelled");
+                            }
+                        });
             }
 
             @Override
