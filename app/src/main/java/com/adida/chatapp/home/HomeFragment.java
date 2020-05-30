@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
                                     data.add(user);
                                 }
 
-                                customRowCell = new CustomRowCell(context, data);
+                                customRowCell = new CustomRowCell(context, data, false);
 
                                 listView.setAdapter(customRowCell);
                                 progressDialog.dismiss();

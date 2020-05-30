@@ -86,6 +86,7 @@ public class SearchFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_search, null);
 
         getUserList();
+        getUserData();
 
         listSearchView = (ListView) layout.findViewById(R.id.listSearchView);
         srcSearchView = (SearchView) layout.findViewById(R.id.srcSearchView);
@@ -125,7 +126,7 @@ public class SearchFragment extends Fragment {
                                     data.add(user);
                                 }
 
-                                customRowCell = new CustomRowCell(context, data);
+                                customRowCell = new CustomRowCell(context, data, true);
 
                                 listSearchView.setAdapter(customRowCell);
                                 progressDialog.dismiss();
@@ -146,4 +147,30 @@ public class SearchFragment extends Fragment {
             }
         });}
 
+    private void getUserData() {
+        progressDialog = ProgressDialog.show(context, "", "Loading...");
+        FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(SharePref.getInstance(context).getUuid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, String> param = (HashMap<String, String>) dataSnapshot.getValue();
+
+                com.adida.chatapp.entities.User user = new com.adida.chatapp.entities.User();
+                user.email = param.get("email");
+                user.countChatMessage = param.get("countChatMessage");
+                user.countCreateConnection = param.get("countCreateConnection");
+                user.name = param.get("name");
+                user.phone = param.get("phone");
+                user.uuid = param.get("uuid");
+
+                progressDialog.dismiss();
+                System.out.println("UIID: ");
+                System.out.print(user.uuid);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

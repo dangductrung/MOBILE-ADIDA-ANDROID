@@ -14,6 +14,19 @@
         ></ImageView>
     <TextView
         android:id="@+id/userId"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></TextView>
+        android:layout_weight="1"></TextView>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        >
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btnAddIcon"
+            android:src="@drawable/addbutton"
+            android:layout_gravity="right"
+            />
+    </FrameLayout>
 </LinearLayout>
