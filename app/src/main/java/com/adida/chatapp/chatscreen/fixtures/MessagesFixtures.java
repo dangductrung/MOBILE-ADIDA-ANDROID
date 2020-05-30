@@ -17,7 +17,7 @@ public final class MessagesFixtures extends FixturesData {
 
     public static Message getImageMessage() {
         Message message = new Message(getRandomId(), getUser(), null);
-        message.setImage(new Message.Image(getRandomImage()));
+        message.setImage(new Message.Image("https://firebasestorage.googleapis.com/v0/b/chatapp-720b3.appspot.com/o/wqw6xeb.png?alt=media&token=93f7a2bc-7e97-4747-a1d9-1bddb56e69a5"));
         return message;
     }
 

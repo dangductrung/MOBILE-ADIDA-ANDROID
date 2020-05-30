@@ -161,4 +161,5 @@ public class CustomRowCell extends BaseAdapter implements Filterable {
             notifyDataSetChanged();
         }
     };
+
 }
