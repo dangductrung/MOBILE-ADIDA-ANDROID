@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_marginBottom="16dp"
-    tools:context=".CustomRowCell">
+  >
     <ImageView
         android:id="@+id/icon"
         android:layout_height="70dp"
@@ -15,5 +15,20 @@
     <TextView
         android:id="@+id/userId"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></TextView>
+        android:layout_height="match_parent"
+        android:layout_weight="1"></TextView>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        >
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:src="@drawable/deletebutton"
+            android:id="@+id/btnDeleteButton">
+        </ImageButton>
+    </FrameLayout>
+
 </LinearLayout>

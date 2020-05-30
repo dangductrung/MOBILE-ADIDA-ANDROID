@@ -95,11 +95,6 @@ public class HomeFragment extends Fragment {
                                 if (!user.uuid.equals(SharePref.getInstance(context).getUuid())) {
                                     data.add(user);
                                 }
-
-                                //customRowCell = new CustomRowCell(context, data);
-
-                                //listView.setAdapter(customRowCell);
-                                //progressDialog.dismiss();
                             }
 
                             @Override
