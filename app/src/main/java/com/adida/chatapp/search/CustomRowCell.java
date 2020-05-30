@@ -11,7 +11,6 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -61,6 +60,7 @@ public class CustomRowCell extends BaseAdapter implements Filterable {
         TextView name = (TextView) row.findViewById(R.id.userId);
         ImageView icon = (ImageView) row.findViewById(R.id.icon);
         ImageButton btnDelete = (ImageButton) row.findViewById(R.id.btnDeleteButton);
+        ImageButton btnCall = (ImageButton) row.findViewById(R.id.btnCall);
         name.setText(user.email);
         icon.setImageResource(R.drawable.main_yellow_hair);
         icon.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -72,6 +72,13 @@ public class CustomRowCell extends BaseAdapter implements Filterable {
             @Override
             public void onClick(View v) {
                 didTapDeleteIcon(user, position, row);
+            }
+        });
+
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: Handle video call
             }
         });
 
