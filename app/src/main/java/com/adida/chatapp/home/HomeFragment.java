@@ -20,7 +20,6 @@ import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.search.CustomRowCell;
-import com.adida.chatapp.search.SearchResultRowCell;
 import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -135,7 +134,7 @@ public class HomeFragment extends Fragment {
                                     }
                                 }
                                 customRowCell = new CustomRowCell(context, dataToSearch);
-
+                                data = dataToSearch;
                                 listView.setAdapter(customRowCell);
                                 progressDialog.dismiss();
 
