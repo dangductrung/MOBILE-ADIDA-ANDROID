@@ -7,6 +7,7 @@ import android.os.SystemClock;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.adida.chatapp.download.DemoDownload;
 import com.adida.chatapp.login.LoginPage;
 
 public class SpashActivity extends AppCompatActivity {
@@ -16,7 +17,8 @@ public class SpashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SystemClock.sleep(1000);
-        startActivity(new Intent(this, LoginPage.class));
+//        startActivity(new Intent(this, LoginPage.class));
+        startActivity(new Intent(this, DemoDownload.class));
 //        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
