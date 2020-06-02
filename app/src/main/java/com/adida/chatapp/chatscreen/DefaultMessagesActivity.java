@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
+import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.fixtures.MessagesFixtures;
 import com.adida.chatapp.chatscreen.models.Message;
 import com.adida.chatapp.chatscreen.utils.AppUtils;
@@ -39,6 +41,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
 
     private MessagesList messagesList;
     private String remoteUserId;
+    private Button btnStartCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,15 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
             RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId);
             wrapper.setChatContext(this);
         }
+
+        btnStartCall=(Button)findViewById(R.id.btnStartCall);
+
+        btnStartCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+            }
+        });
     }
 
     @Override

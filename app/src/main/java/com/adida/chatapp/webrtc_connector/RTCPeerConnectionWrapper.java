@@ -30,6 +30,7 @@ public class RTCPeerConnectionWrapper {
 
     private Context activityContext;
     private Context chatContext;
+    private Context callContext;
 
     public  RTCPeerConnectionWrapper(String remoteUserID, Context activityContext){
         this.remoteUserID=remoteUserID;
@@ -46,6 +47,10 @@ public class RTCPeerConnectionWrapper {
 
     public void setChatContext(Context context){
         chatContext=context;
+    }
+
+    public void setCallContext(Context context){
+        callContext=context;
     }
 
     public void StartStreaming(VideoTrack cameraVideoTrack){
@@ -123,8 +128,12 @@ public class RTCPeerConnectionWrapper {
     }
 
     public void receiveOffer(String sdp){
+        //Prompt yes/no
+
         peerConnection.setRemoteDescription(new SimpleSdpObserver()
                 ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
+
+        //Add video track here
 
         createAnswer();
     }

@@ -85,6 +85,10 @@ public class SimplePCObserver {
 
             @Override
             public void onRenegotiationNeeded() {
+                if(rtcPeerConnectionWrapper.getConnectionState().equals("CONNECTED"))
+                    rtcPeerConnectionWrapper.createOffer();
+                //rtcPeerConnectionWrapper.createOffer();
+                Log.d("123", "onRenegotiationNeeded: 123");
             }
 
             //Triggered when a remote peer adds a track to their stream
