@@ -81,4 +81,6 @@ public final class MessagesFixtures extends FixturesData {
                 even ? avatars.get(0) : avatars.get(1),
                 true);
     }
+
+
 }

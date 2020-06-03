@@ -1,16 +1,15 @@
 package com.adida.chatapp.download;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.PowerManager;
-
-import android.os.PowerManager;
 import android.util.Log;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -19,7 +18,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
 
     private Context context;
     private PowerManager.WakeLock mWakeLock;
-
+    ProgressDialog dialog;
     public DownloadTask(Context context) {
         this.context = context;
     }
@@ -93,43 +92,19 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        // take CPU lock to prevent CPU from going off if the user
-        // presses the power button during download
-//        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-//        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-//                getClass().getName());
-//        mWakeLock.acquire();
-
-//        mProgressDialog.show();
+        dialog = ProgressDialog.show(context,"","Downloading");
         Log.e("QT onPreExecute", "before download");
     }
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
-        // if we get here, length is known, now set indeterminate to false
-//        mProgressDialog.setIndeterminate(false);
-//        mProgressDialog.setMax(100);
-//        mProgressDialog.setProgress(progress[0]);
-
-
-        ((DemoDownload)context).txtInfo.setText("\n " + progress[0]);
     }
 
     @Override
     protected void onPostExecute(String result) {
-//        mWakeLock.release();
-//        mProgressDialog.dismiss();
         Log.e("QT onPreExecute", "result: " + result);
-        if (result != null){
-            ((DemoDownload)context).txtInfo.append("\n failed!");
-        }
-//            Toast.makeText(context,"Download error: "+result, Toast.LENGTH_LONG).show();
-        else{
-            ((DemoDownload)context).txtInfo.append("\n successful!");
-
-        }
-//            Toast.makeText(context,"File downloaded", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
     }
 
 }

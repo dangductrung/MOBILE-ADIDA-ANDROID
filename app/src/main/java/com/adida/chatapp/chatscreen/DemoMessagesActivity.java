@@ -1,7 +1,6 @@
 package com.adida.chatapp.chatscreen;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,28 +9,30 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.adida.chatapp.chatscreen.fixtures.MessagesFixtures;
-import com.adida.chatapp.chatscreen.models.Message;
 import com.adida.chatapp.R;
+import com.adida.chatapp.chatscreen.models.Message;
 import com.adida.chatapp.chatscreen.utils.AppUtils;
+import com.adida.chatapp.download.DownloadTask;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 /*
  * Created by troy379 on 04.04.17.
  */
+
+
 public abstract class DemoMessagesActivity extends AppCompatActivity
         implements MessagesListAdapter.SelectionListener,
-        MessagesListAdapter.OnLoadMoreListener {
+        MessagesListAdapter.OnLoadMoreListener, MessagesListAdapter.OnMessageClickListener {
 
     private static final int TOTAL_MESSAGES_COUNT = 100;
-
+    static String APP_PATH = "/sdcard/chatapp/";
     protected final String senderId = "0";
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
@@ -39,10 +40,12 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     private Menu menu;
     private int selectionCount;
     private Date lastLoadedDate;
+    private boolean isSelected = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         imageLoader = new ImageLoader() {
             @Override
@@ -98,10 +101,44 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
 
     @Override
     public void onSelectionChanged(int count) {
-        this.selectionCount = count;
-        menu.findItem(R.id.action_delete).setVisible(count > 0);
-        menu.findItem(R.id.action_copy).setVisible(count > 0);
+        if (!isSelected) {
+            Log.e("df","fsadf");
+            isSelected = true;
+            Message a  = messagesAdapter.getSelectedMessages().get(0);
+            if (a.getImageUrl() != null) {
+                startDownload(a.getImageUrl());
+            }
+            messagesAdapter.unselectAllItems();
+        } else {
+            isSelected = false;
+            return;
+        }
+
     }
+
+    public void startDownload(String url) {
+        createPathIfNotExist(APP_PATH);
+        String destPath = APP_PATH + getFileName(url);
+        startDownload(url, destPath);
+    }
+
+    private void startDownload(String urlToFile, String destPath){
+        DownloadTask downloadTask = new DownloadTask(this);
+        downloadTask.execute(urlToFile, destPath);
+    }
+
+    private static String getFileName(String path){
+        int pos = path.lastIndexOf("/");
+        return path.substring(pos);
+    }
+
+    private static void createPathIfNotExist(String path){
+        File folder = new File(path);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
+
 
     protected void loadMessages() {
 //        new Handler().postDelayed(new Runnable() { //imitation of internet connection

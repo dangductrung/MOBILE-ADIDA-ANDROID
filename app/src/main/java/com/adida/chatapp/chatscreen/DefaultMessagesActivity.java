@@ -27,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -228,5 +229,9 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     protected void onStop() {
         super.onStop();
         ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId).state = ActivityState.OUT;
+    }
+
+    @Override
+    public void onMessageClick(IMessage message) {
     }
 }

@@ -1,13 +1,14 @@
 package com.adida.chatapp.download;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.adida.chatapp.R;
 
@@ -20,7 +21,7 @@ public class DemoDownload extends AppCompatActivity {
 
 //    String urlToFile = "https://file-examples.com/wp-content/uploads/2017/02/zip_5MB.zip";
     String urlToFile = "https://image.shutterstock.com/image-photo/bright-spring-view-cameo-island-260nw-1048185397.jpg";
-    String APP_PATH = "/sdcard/chatapp/";
+    static String APP_PATH = "/sdcard/chatapp/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +69,12 @@ public class DemoDownload extends AppCompatActivity {
         downloadTask.execute(urlToFile, destPath);
     }
 
-    private String getFileName(String path){
+    private static String getFileName(String path){
         int pos = path.lastIndexOf("/");
         return path.substring(pos);
     }
 
-    private void createPathIfNotExist(String path){
+    private static void createPathIfNotExist(String path){
         File folder = new File(path);
         if (!folder.exists()) {
             folder.mkdirs();
