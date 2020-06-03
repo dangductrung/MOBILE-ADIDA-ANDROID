@@ -7,11 +7,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.fixtures.MessagesFixtures;
 import com.adida.chatapp.chatscreen.models.Message;
 import com.adida.chatapp.chatscreen.utils.AppUtils;
@@ -59,6 +61,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
 
     private MessagesList messagesList;
     private String remoteUserId;
+    private Button btnStartCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

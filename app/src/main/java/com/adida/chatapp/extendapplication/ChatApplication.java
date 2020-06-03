@@ -17,6 +17,8 @@ public class ChatApplication {
 
     private static PeerConnectionFactory peerConnectionFactory;
 
+    public static EglBase RootEglBase;
+
     public static ChatApplication getInstance(){
         if (instance == null) {
             instance = new ChatApplication();
@@ -26,6 +28,7 @@ public class ChatApplication {
 
     public static void initPeerConnectionFactory(Context activityContext){
         EglBase rootEglBase = EglBase.create();
+        RootEglBase=rootEglBase;
 
         PeerConnectionFactory.InitializationOptions initOptions=
                 PeerConnectionFactory

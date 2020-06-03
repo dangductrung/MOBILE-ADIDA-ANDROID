@@ -23,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".download.DemoDownload"></activity>
+        <activity android:name=".callscreen.CallScreenActivity"></activity>
         <activity android:name=".statistic.StatisticPage" />
         <activity android:name=".report.ReportActivity" />
         <activity android:name=".login.LoginPage" />
