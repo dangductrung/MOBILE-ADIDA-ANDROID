@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
+import com.adida.chatapp.entities.SDPInfo;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
@@ -51,6 +53,11 @@ public class RTCPeerConnectionWrapper {
 
     public void setCallContext(Context context){
         callContext=context;
+    }
+
+    public void setRemoteDescription(String sdp){
+        peerConnection.setRemoteDescription(new SimpleSdpObserver()
+                ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
     }
 
     public void StartStreaming(VideoTrack cameraVideoTrack){
@@ -129,13 +136,17 @@ public class RTCPeerConnectionWrapper {
 
     public void receiveOffer(String sdp){
         //Prompt yes/no
+        if(sdp.contains("m=video")){
+            CallScreenActivity.open(chatContext,remoteUserID,sdp,true);
+        }
+        else{
+            peerConnection.setRemoteDescription(new SimpleSdpObserver()
+                    ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
 
-        peerConnection.setRemoteDescription(new SimpleSdpObserver()
-                ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
+            createAnswer();
+        }
 
-        //Add video track here
 
-        createAnswer();
     }
 
     public void receiveAnswer(String sdp){
@@ -174,5 +185,17 @@ public class RTCPeerConnectionWrapper {
             }
         });
 
+    }
+
+    public void receiveOnAddTrackMessage(VideoTrack videoTrack){
+        Context act=activityContext;
+        MainActivity mainActivity= (MainActivity)activityContext;
+        mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CallScreenActivity activityCallScreen= (CallScreenActivity) callContext;
+                activityCallScreen.receiveRemoteVideoTrack(videoTrack);
+            }
+        });
     }
 }

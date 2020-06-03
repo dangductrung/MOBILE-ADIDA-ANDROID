@@ -28,6 +28,14 @@ public class CallScreenActivity extends AppCompatActivity {
         context.startActivity(actCall);
     }
 
+    public static void open(Context context, String remoteUserId,String sdp, boolean isAnswer) {
+        Intent actCall = new Intent(context, CallScreenActivity.class);
+        actCall.putExtra("remoteUserId",remoteUserId);
+        actCall.putExtra("type",isAnswer);
+        actCall.putExtra("sdp",sdp);
+        context.startActivity(actCall);
+    }
+
     public static final int VIDEO_RESOLUTION_WIDTH = 1280;
     public static final int VIDEO_RESOLUTION_HEIGHT = 720;
     public static final int FPS = 30;
@@ -51,7 +59,8 @@ public class CallScreenActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         String extrasUserId=b.getString("remoteUserId");
-        //boolean isAnswer=b.getBoolean("type");
+        boolean isAnswer=b.getBoolean("type");
+        String sdp=b.getString("sdp");
 
         rootEglBase=EglBase.create();
         initializeSurfaceViews();
@@ -62,6 +71,14 @@ public class CallScreenActivity extends AppCompatActivity {
             RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId);
             wrapper.setCallContext(this);
             wrapper.StartStreaming(videoTrackFromCamera);
+
+            if(isAnswer){
+                wrapper.setRemoteDescription(sdp);
+                wrapper.createAnswer();
+            }
+            else{
+                wrapper.createOffer();
+            }
         }
     }
 
@@ -84,7 +101,10 @@ public class CallScreenActivity extends AppCompatActivity {
         videoTrackFromCamera=factory.createVideoTrack("ARMDAMSv0", videoSource);
 
         videoTrackFromCamera.setEnabled(true);
-        //Add the local surface as a sink of the video track
         videoTrackFromCamera.addSink(surfaceLocal);
+    }
+
+    public void receiveRemoteVideoTrack(VideoTrack videoTrackRemote){
+        videoTrackRemote.addSink(surfaceRemote);
     }
 }

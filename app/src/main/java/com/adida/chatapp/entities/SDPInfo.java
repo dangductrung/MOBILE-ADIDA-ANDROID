@@ -4,6 +4,12 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class SDPInfo {
+    public enum MediaType {
+        TEXT,
+        VIDEO,
+        AUDIO
+    }
+
     public String description;
     //public JSONObject iceCandidate;
     public String uuid;
