@@ -113,7 +113,7 @@ public class RTCPeerConnectionWrapper {
                 //this as localDescription
                 tempOfferSessionDescription= sessionDescription;
 
-                //peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
+                peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
             }
         }, sdpMediaConstraints);
     }
@@ -137,7 +137,7 @@ public class RTCPeerConnectionWrapper {
     public void receiveOffer(String sdp){
         //Prompt yes/no
         if(sdp.contains("m=video")){
-            CallScreenActivity.open(chatContext,remoteUserID,sdp,true);
+            CallScreenActivity.open(activityContext,remoteUserID,sdp,true);
         }
         else{
             peerConnection.setRemoteDescription(new SimpleSdpObserver()
@@ -189,8 +189,8 @@ public class RTCPeerConnectionWrapper {
 
     public void receiveOnAddTrackMessage(VideoTrack videoTrack){
         Context act=activityContext;
-        MainActivity mainActivity= (MainActivity)activityContext;
-        mainActivity.runOnUiThread(new Runnable() {
+        Activity activity= (Activity)act;
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 CallScreenActivity activityCallScreen= (CallScreenActivity) callContext;

@@ -68,17 +68,38 @@ public class CallScreenActivity extends AppCompatActivity {
 
         if(extrasUserId!=null && !extrasUserId.isEmpty()) {
             remoteUserId = extrasUserId;
-            RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId);
-            wrapper.setCallContext(this);
-            wrapper.StartStreaming(videoTrackFromCamera);
+            if(!ChatApplication.getInstance().getUserPeerConnections().containsKey(remoteUserId)){
+                RTCPeerConnectionWrapper wrapper= new RTCPeerConnectionWrapper(remoteUserId,this);
+                wrapper.StartDataChannel();
+                ChatApplication.getInstance().getUserPeerConnections().put(remoteUserId,wrapper);
+                wrapper.setCallContext(this);
+                wrapper.StartStreaming(videoTrackFromCamera);
 
-            if(isAnswer){
-                wrapper.setRemoteDescription(sdp);
-                wrapper.createAnswer();
+                if(isAnswer){
+                    wrapper.setRemoteDescription(sdp);
+                    wrapper.createAnswer();
+                }
+                else{
+                    wrapper.createOffer();
+                }
             }
             else{
-                wrapper.createOffer();
+                RTCPeerConnectionWrapper wrapper=ChatApplication.getInstance().getUserPeerConnections().get(remoteUserId);
+
+                wrapper.setCallContext(this);
+                wrapper.StartStreaming(videoTrackFromCamera);
+
+                if(isAnswer){
+                    wrapper.setRemoteDescription(sdp);
+                    wrapper.createAnswer();
+                }
+                else{
+                    wrapper.createOffer();
+                }
             }
+
+
+
         }
     }
 

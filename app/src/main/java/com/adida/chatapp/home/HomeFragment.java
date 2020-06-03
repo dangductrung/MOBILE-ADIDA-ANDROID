@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
@@ -131,7 +132,8 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position>=0 && data.size() >0){
                     User clickedUser=data.get(position);
-                    DefaultMessagesActivity.open(getActivity(),clickedUser);
+                    //DefaultMessagesActivity.open(getActivity(),clickedUser);
+                    CallScreenActivity.open(getActivity(),clickedUser.uuid,false);
                 }
             }
         });
