@@ -58,6 +58,7 @@ public class LoginPage extends AppCompatActivity {
         if (!(SharePref.getInstance(getApplicationContext()).getUuid() == null)) {
             FirebaseManager.getInstance().setState(true, getApplicationContext());
             startActivity(intent);
+            finish();
         }
     }
 

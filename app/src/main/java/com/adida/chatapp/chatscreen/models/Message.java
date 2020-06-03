@@ -8,6 +8,8 @@ import java.util.Date;
 /*
  * Created by troy379 on 04.04.17.
  */
+
+
 public class Message implements IMessage,
         MessageContentType.Image, /*this is for default image messages implementation*/
         MessageContentType /*and this one is for custom content type (in this case - voice message)*/ {
@@ -55,6 +57,7 @@ public class Message implements IMessage,
         return image == null ? null : image.url;
     }
 
+
     public Voice getVoice() {
         return voice;
     }
@@ -78,6 +81,7 @@ public class Message implements IMessage,
     public void setVoice(Voice voice) {
         this.voice = voice;
     }
+
 
     public static class Image {
 
@@ -106,4 +110,6 @@ public class Message implements IMessage,
             return duration;
         }
     }
+
+
 }

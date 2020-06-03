@@ -3,10 +3,6 @@ package com.adida.chatapp.chatscreen.fixtures;
 import com.adida.chatapp.chatscreen.models.Message;
 import com.adida.chatapp.chatscreen.models.User;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
 /*
  * Created by troy379 on 12.12.16.
  */
@@ -15,9 +11,16 @@ public final class MessagesFixtures extends FixturesData {
         throw new AssertionError();
     }
 
-    public static Message getImageMessage() {
+    public static Message getImageMessage(String url) {
         Message message = new Message(getRandomId(), getUser(), null);
-        message.setImage(new Message.Image(getRandomImage()));
+        message.setImage(new Message.Image(url));
+        return message;
+    }
+
+    public static Message getImageMessage(String url, String id) {
+        Message message = new Message(getRandomId(), getUser(id), null);
+        String a = url;
+        message.setImage(new Message.Image(url));
         return message;
     }
 
@@ -35,29 +38,29 @@ public final class MessagesFixtures extends FixturesData {
         return new Message(getRandomId(), getUser(), text);
     }
 
-    public static ArrayList<Message> getMessages(Date startDate) {
-        ArrayList<Message> messages = new ArrayList<>();
-        for (int i = 0; i < 10/*days count*/; i++) {
-            int countPerDay = rnd.nextInt(5) + 1;
-
-            for (int j = 0; j < countPerDay; j++) {
-                Message message;
-                if (i % 2 == 0 && j % 3 == 0) {
-                    message = getImageMessage();
-                } else {
-                    message = getTextMessage();
-                }
-
-                Calendar calendar = Calendar.getInstance();
-                if (startDate != null) calendar.setTime(startDate);
-                calendar.add(Calendar.DAY_OF_MONTH, -(i * i + 1));
-
-                message.setCreatedAt(calendar.getTime());
-                messages.add(message);
-            }
-        }
-        return messages;
-    }
+//    public static ArrayList<Message> getMessages(Date startDate) {
+//        ArrayList<Message> messages = new ArrayList<>();
+//        for (int i = 0; i < 10/*days count*/; i++) {
+//            int countPerDay = rnd.nextInt(5) + 1;
+//
+//            for (int j = 0; j < countPerDay; j++) {
+//                Message message;
+//                if (i % 2 == 0 && j % 3 == 0) {
+//                    message = getImageMessage();
+//                } else {
+//                    message = getTextMessage();
+//                }
+//
+//                Calendar calendar = Calendar.getInstance();
+//                if (startDate != null) calendar.setTime(startDate);
+//                calendar.add(Calendar.DAY_OF_MONTH, -(i * i + 1));
+//
+//                message.setCreatedAt(calendar.getTime());
+//                messages.add(message);
+//            }
+//        }
+//        return messages;
+//    }
 
     public static User getUser() {
         boolean even = rnd.nextBoolean();
@@ -78,4 +81,6 @@ public final class MessagesFixtures extends FixturesData {
                 even ? avatars.get(0) : avatars.get(1),
                 true);
     }
+
+
 }
