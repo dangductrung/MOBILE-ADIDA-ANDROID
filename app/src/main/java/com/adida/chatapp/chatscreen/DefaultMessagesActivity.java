@@ -70,7 +70,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         btnStartCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+                //CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
             }
         });
     }

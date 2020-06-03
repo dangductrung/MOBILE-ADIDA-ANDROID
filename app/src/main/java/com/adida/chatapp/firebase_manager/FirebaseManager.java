@@ -87,14 +87,16 @@ public class FirebaseManager {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final SDPInfo sdpInfo = dataSnapshot.getValue(SDPInfo.class);
                 FirebaseDatabase.getInstance().getReference(FirebaseKeys.SDPOffers).child(localUuid).removeValue();
+                RTCPeerConnectionWrapper wrapper;
+
                 if ( ChatApplication.getInstance().getUserPeerConnections() != null && ChatApplication.getInstance().getUserPeerConnections().containsKey(sdpInfo.uuid)) {
-                    RTCPeerConnectionWrapper wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
-                    wrapper.receiveOffer(sdpInfo.description);
+                    wrapper= ChatApplication.getInstance().getUserPeerConnections().get(sdpInfo.uuid);
                 } else{
-                    RTCPeerConnectionWrapper wrapper = new RTCPeerConnectionWrapper(sdpInfo.uuid,context);
+                    wrapper = new RTCPeerConnectionWrapper(sdpInfo.uuid,context);
                     ChatApplication.getInstance().getUserPeerConnections().put(sdpInfo.uuid,wrapper);
-                    wrapper.receiveOffer(sdpInfo.description);
                 }
+
+                wrapper.receiveOffer(sdpInfo.description);
             }
 
             @Override

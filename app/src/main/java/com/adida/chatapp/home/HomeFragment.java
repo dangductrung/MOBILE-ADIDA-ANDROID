@@ -133,7 +133,8 @@ public class HomeFragment extends Fragment {
                 if(position>=0 && data.size() >0){
                     User clickedUser=data.get(position);
                     //DefaultMessagesActivity.open(getActivity(),clickedUser);
-                    CallScreenActivity.open(getActivity(),clickedUser.uuid,false);
+                    //CallScreenActivity.open(getActivity(),clickedUser.uuid,false);
+                    CallScreenActivity.open(getActivity(),clickedUser,false);
                 }
             }
         });

@@ -55,12 +55,7 @@ public class RTCPeerConnectionWrapper {
         callContext=context;
     }
 
-    public void setRemoteDescription(String sdp){
-        peerConnection.setRemoteDescription(new SimpleSdpObserver()
-                ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
-    }
-
-    public void StartStreaming(VideoTrack cameraVideoTrack){
+    public void addTrack(VideoTrack cameraVideoTrack){
         peerConnection.addTrack(cameraVideoTrack);
     }
 
@@ -113,7 +108,7 @@ public class RTCPeerConnectionWrapper {
                 //this as localDescription
                 tempOfferSessionDescription= sessionDescription;
 
-                peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
+                //peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
             }
         }, sdpMediaConstraints);
     }
@@ -145,8 +140,11 @@ public class RTCPeerConnectionWrapper {
 
             createAnswer();
         }
+    }
 
-
+    public void setRemoteDescription(String sdp){
+        peerConnection.setRemoteDescription(new SimpleSdpObserver()
+                ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
     }
 
     public void receiveAnswer(String sdp){
@@ -188,13 +186,12 @@ public class RTCPeerConnectionWrapper {
     }
 
     public void receiveOnAddTrackMessage(VideoTrack videoTrack){
-        Context act=activityContext;
-        Activity activity= (Activity)act;
+        Activity activity= (Activity)activityContext;
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 CallScreenActivity activityCallScreen= (CallScreenActivity) callContext;
-                activityCallScreen.receiveRemoteVideoTrack(videoTrack);
+                activityCallScreen.addRemoteVideoTrack(videoTrack);
             }
         });
     }
