@@ -20,7 +20,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
@@ -190,8 +189,13 @@ public class RTCPeerConnectionWrapper {
                         getUserInfo(tokens[0],tokens[2], PendingMessage.TEXT);
                     }
                     else {
-                        getUserInfo(tokens[0],tokens[2],PendingMessage.URL);
-                        FirebaseStorage.getInstance().getReference().child("images/"+tokens[3]).delete();
+                        String url = tokens[2];
+                        for (int i =3 ;i < tokens.length - 1; i++) {
+                            url += "-" + tokens[i];
+                        }
+                        getUserInfo(tokens[0],url,PendingMessage.URL);
+                        //TODO: delete image on firebase storage
+                        //FirebaseStorage.getInstance().getReference().child("images/"+tokens[tokens.length - 1]).delete();
                     }
                 }
             }

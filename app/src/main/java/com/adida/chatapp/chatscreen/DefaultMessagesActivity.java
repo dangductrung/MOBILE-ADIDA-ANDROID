@@ -115,13 +115,12 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
 
     public void receiveMessage(String message) {
         //TODO: check
-
         String[] tokens = message.split("-");
         if (message.contains("message")) {
             super.messagesAdapter.addToStart(new Message(remoteUserId, MessagesFixtures.getUser("1"), tokens[2]), true);
         } else {
             String url = tokens[2];
-            for (int i =3 ;i < tokens.length; i++) {
+            for (int i =3 ;i < tokens.length - 1; i++) {
                 url += "-" + tokens[i];
             }
             super.messagesAdapter.addToStart(MessagesFixtures.getImageMessage(url,"1"), true);
