@@ -67,4 +67,6 @@ public final class DialogsFixtures extends FixturesData {
                 getRandomMessage(),
                 date);
     }
+
+
 }

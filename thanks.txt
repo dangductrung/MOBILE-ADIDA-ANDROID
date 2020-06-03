@@ -8,6 +8,8 @@ https://stackoverflow.com/questions/5976805/android-linearlayout-gradient-backgr
 
 draw icon: draw.io: https://app.diagrams.net/
 
+https://stackoverflow.com/questions/3028306/download-a-file-with-android-and-showing-the-progress-in-a-progressdialog
+
 
 
 

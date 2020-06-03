@@ -97,8 +97,15 @@ public class RTCPeerConnectionWrapper {
     }
 
     public void sendDataChannelMessage(String message){
-        message = SharePref.getInstance(activityContext).getUuid() + "-" + message;
+        message = SharePref.getInstance(activityContext).getUuid() + "-message-" + message;
         ByteBuffer data = Utils.stringToByteBuffer(message, Charset.defaultCharset());
+        Log.d("send message", "sendDataChannelMessage: ");
+        dataChannel.send(new DataChannel.Buffer(data, false));
+    }
+
+    public void sendImageUrlMessage(String url, String uniqueId) {
+        url = SharePref.getInstance(activityContext).getUuid() + "-image-" + url + "-" + uniqueId;
+        ByteBuffer data = Utils.stringToByteBuffer(url, Charset.defaultCharset());
         Log.d("send message", "sendDataChannelMessage: ");
         dataChannel.send(new DataChannel.Buffer(data, false));
     }
@@ -176,17 +183,27 @@ public class RTCPeerConnectionWrapper {
                 String [] tokens = message.split("-");
 
                 DefaultMessagesActivity activityDefaultMessage= (DefaultMessagesActivity) chatContext;
-                activityDefaultMessage.receiveMessage(tokens[1]);
-
+                activityDefaultMessage.receiveMessage(message);
                 if (state == ActivityState.OUT) {
-                    getUserInfo(tokens[0],tokens[1]);
+                    if (message.contains("message")) {
+                        getUserInfo(tokens[0],tokens[2], PendingMessage.TEXT);
+                    }
+                    else {
+                        String url = tokens[2];
+                        for (int i =3 ;i < tokens.length - 1; i++) {
+                            url += "-" + tokens[i];
+                        }
+                        getUserInfo(tokens[0],url,PendingMessage.URL);
+                        //TODO: delete image on firebase storage
+                        //FirebaseStorage.getInstance().getReference().child("images/"+tokens[tokens.length - 1]).delete();
+                    }
                 }
             }
         });
 
     }
 
-    private void getUserInfo(String uuid, String sendingMessage) {
+    private void getUserInfo(String uuid, String sendingMessage, int type) {
         FirebaseDatabase.getInstance().getReference(FirebaseKeys.profile).child(uuid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -194,8 +211,9 @@ public class RTCPeerConnectionWrapper {
                 PendingMessage message = new PendingMessage();
                 message.message = sendingMessage;
                 message.sender = uuid;
+                message.type = type;
                 PendingMessageManager.pending.add(message);
-                pushNotification("Message from "+ user.email, sendingMessage);
+                pushNotification("Message from "+ user.email,type == PendingMessage.TEXT ?  sendingMessage : "image");
             }
 
             @Override

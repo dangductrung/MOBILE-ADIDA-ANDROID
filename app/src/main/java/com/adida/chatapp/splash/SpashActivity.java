@@ -17,6 +17,7 @@ public class SpashActivity extends AppCompatActivity {
 
         SystemClock.sleep(1000);
         startActivity(new Intent(this, LoginPage.class));
+//        startActivity(new Intent(this, DemoDownload.class));
 //        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
