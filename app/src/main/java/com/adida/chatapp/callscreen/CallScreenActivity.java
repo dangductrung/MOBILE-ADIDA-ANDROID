@@ -32,6 +32,13 @@ public class CallScreenActivity extends AppCompatActivity {
         context.startActivity(actCall);
     }
 
+    public static void open(Context context, String userId,boolean isAnswer) {
+        Intent actCall = new Intent(context, CallScreenActivity.class);
+        actCall.putExtra("remoteUserId",userId);
+        actCall.putExtra("type",isAnswer);
+        context.startActivity(actCall);
+    }
+
     public static void open(Context context, String userId,String sdp,boolean isAnswer) {
         Intent actCall = new Intent(context, CallScreenActivity.class);
         actCall.putExtra("remoteUserId",userId);
@@ -47,6 +54,7 @@ public class CallScreenActivity extends AppCompatActivity {
     private SurfaceViewRenderer surfaceLocal;
     private SurfaceViewRenderer surfaceRemote;
     private Button btnEndCall;
+
 
     private EglBase rootEglBase;
     private VideoTrack videoTrackFromCamera;

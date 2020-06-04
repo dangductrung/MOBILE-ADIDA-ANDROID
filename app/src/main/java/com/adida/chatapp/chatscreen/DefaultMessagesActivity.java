@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
 import com.adida.chatapp.R;
 import com.adida.chatapp.callscreen.CallScreenActivity;
@@ -49,6 +52,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     public static void open(Context context, User user) {
         Intent actMessages = new Intent(context, DefaultMessagesActivity.class);
         actMessages.putExtra("remoteUserId", user.uuid);
+        actMessages.putExtra("remoteUserName", user.name);
         context.startActivity(actMessages);
         if (!ChatApplication.getInstance().getUserPeerConnections().containsKey(user.uuid)) {
             RTCPeerConnectionWrapper wrapper = new RTCPeerConnectionWrapper(user.uuid, context);
@@ -62,6 +66,8 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     private MessagesList messagesList;
     private String remoteUserId;
     private Button btnStartCall;
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,9 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         this.messagesList = (MessagesList) findViewById(R.id.messagesList);
         initAdapter();
 
+        toolbar=findViewById(R.id.chat_tool_bar);
+        setSupportActionBar(toolbar);
+
         MessageInput input = (MessageInput) findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
@@ -78,6 +87,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
 
         Bundle b = getIntent().getExtras();
         String extrasUserId = b.getString("remoteUserId");
+        String extrasUserName = b.getString("remoteUserName");
 
         if (extrasUserId != null && !extrasUserId.isEmpty()) {
             remoteUserId = extrasUserId;
@@ -85,7 +95,29 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
             wrapper.setChatContext(this);
         }
 
+        getSupportActionBar().setTitle(extrasUserName);
+
         loadPendingMessage();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.chat_main_actions,menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_chat_video) {
+            CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
