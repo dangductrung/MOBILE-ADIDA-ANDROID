@@ -171,9 +171,8 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position>=0 && data.size() >0){
                     User clickedUser=data.get(position);
-                    //DefaultMessagesActivity.open(getActivity(),clickedUser);
-                    //CallScreenActivity.open(getActivity(),clickedUser.uuid,false);
-                    CallScreenActivity.open(getActivity(),clickedUser,false);
+                    DefaultMessagesActivity.open(getActivity(),clickedUser);
+                    //CallScreenActivity.open(getActivity(),clickedUser,false);
                 }
             }
         });

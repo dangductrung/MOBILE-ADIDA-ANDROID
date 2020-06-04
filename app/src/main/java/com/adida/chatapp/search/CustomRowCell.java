@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.sharepref.SharePref;
@@ -79,6 +80,7 @@ public class CustomRowCell extends BaseAdapter implements Filterable {
             @Override
             public void onClick(View v) {
                 //TODO: Handle video call
+                CallScreenActivity.open(mContext,user,false);
             }
         });
 
