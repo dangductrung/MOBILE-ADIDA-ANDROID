@@ -1,6 +1,9 @@
 package com.adida.chatapp.webrtc_connector;
 
+import android.os.Build;
 import android.util.Log;
+
+import com.adida.chatapp.extendapplication.ChatApplication;
 
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
@@ -85,19 +88,32 @@ public class SimplePCObserver {
 
             @Override
             public void onRenegotiationNeeded() {
+                //if(rtcPeerConnectionWrapper.getConnectionState().equals("CONNECTED")) {
+                 //   Log.d("123", "onRenegotiationNeeded: 123");
+                 //   rtcPeerConnectionWrapper.createOffer();
+                 //   //rtcPeerConnectionWrapper.createOffer();
+                //}
+
             }
 
             //Triggered when a remote peer adds a track to their stream
             @Override
             public void onAddTrack(RtpReceiver rtpReceiver, MediaStream[] mediaStreams) {
+                Log.d("onAddTrack", "onAddTrack: ");
                 //Get media from stream and create a video track
+//                MediaStream remoteMediaStream = mediaStreams[0];
+//                VideoTrack v= remoteMediaStream.videoTracks.get(0);
+//                v.setEnabled(true);
+//
+//                //Show remote stream in remote surface
+//                //SurfaceViewRenderer surfaceRemote = (SurfaceViewRenderer) ((Activity) context).findViewById(R.id.surfaceRemote);
+//                //v.addSink(surfaceRemote);
+//                rtcPeerConnectionWrapper.receiveOnAddTrackMessage(v);
                 MediaStream remoteMediaStream = mediaStreams[0];
                 VideoTrack v= remoteMediaStream.videoTracks.get(0);
                 v.setEnabled(true);
-
-                //Show remote stream in remote surface
-                //SurfaceViewRenderer surfaceRemote = (SurfaceViewRenderer) ((Activity) context).findViewById(R.id.surfaceRemote);
-                //v.addSink(surfaceRemote);
+                Log.d("receiveTrack",  v.id());
+                rtcPeerConnectionWrapper.receiveOnAddTrackMessage(v);
             }
 
         };

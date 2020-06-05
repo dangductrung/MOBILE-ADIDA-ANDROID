@@ -1,5 +1,6 @@
 package com.adida.chatapp.webrtc_connector;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -8,6 +9,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.extendapplication.ChatApplication;
@@ -43,6 +45,7 @@ public class RTCPeerConnectionWrapper {
     private Context activityContext;
     private Context chatContext;
     public int state;
+    private Context callContext;
 
     public  RTCPeerConnectionWrapper(String remoteUserID, Context activityContext){
         this.remoteUserID=remoteUserID;
@@ -61,7 +64,11 @@ public class RTCPeerConnectionWrapper {
         chatContext=context;
     }
 
-    public void StartStreaming(VideoTrack cameraVideoTrack){
+    public void setCallContext(Context context){
+        callContext=context;
+    }
+
+    public void addTrack(VideoTrack cameraVideoTrack){
         peerConnection.addTrack(cameraVideoTrack);
     }
 
@@ -144,10 +151,21 @@ public class RTCPeerConnectionWrapper {
     }
 
     public void receiveOffer(String sdp){
+        //Prompt yes/no
+        if(sdp.contains("m=video")){
+            CallScreenActivity.open(activityContext,remoteUserID,sdp,true);
+        }
+        else{
+            peerConnection.setRemoteDescription(new SimpleSdpObserver()
+                    ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
+
+            createAnswer();
+        }
+    }
+
+    public void setRemoteDescription(String sdp){
         peerConnection.setRemoteDescription(new SimpleSdpObserver()
                 ,new SessionDescription(SessionDescription.Type.OFFER,sdp));
-
-        createAnswer();
     }
 
     public void receiveAnswer(String sdp){
@@ -235,5 +253,15 @@ public class RTCPeerConnectionWrapper {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(activityContext);
         notificationManager.notify(count, mBuilder.build());
         count += 1;
+    }
+    public void receiveOnAddTrackMessage(VideoTrack videoTrack){
+        Activity activity= (Activity)activityContext;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CallScreenActivity activityCallScreen= (CallScreenActivity) callContext;
+                activityCallScreen.addRemoteVideoTrack(videoTrack);
+            }
+        });
     }
 }
