@@ -1,19 +1,19 @@
 package com.adida.chatapp.callscreen;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.adida.chatapp.R;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.webrtc_connector.RTCPeerConnectionWrapper;
 import com.adida.chatapp.webrtc_connector.Utils;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import org.webrtc.EglBase;
 import org.webrtc.PeerConnectionFactory;
@@ -95,6 +95,7 @@ public class CallScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("onClick",wrapper.getConnectionState());
+                finish();
             }
         });
 

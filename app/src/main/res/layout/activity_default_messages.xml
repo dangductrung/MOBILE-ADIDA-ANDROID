@@ -17,11 +17,12 @@
 
     <com.stfalcon.chatkit.messages.MessagesList
         android:id="@+id/messagesList"
-        app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/input"/>
+        android:layout_above="@+id/input"
+        android:layout_marginBottom="-4dp"
+        app:contentInsetEnd="0dp"
+        app:contentInsetStart="0dp" />
 
     <View
         android:layout_width="match_parent"

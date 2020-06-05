@@ -9,11 +9,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.adida.chatapp.R;
-import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
-import com.adida.chatapp.entities.User;
 import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.DefaultMessagesActivity;
-import com.adida.chatapp.entities.SDPInfo;
+import com.adida.chatapp.entities.User;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
