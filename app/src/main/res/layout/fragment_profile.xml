@@ -29,6 +29,7 @@
                     android:src="@drawable/historyicon"
                     android:background="@color/transparent"
                     android:layout_marginLeft="10dp"
+                    android:id="@+id/btnHistoryButton"
                     />
                 <TextView
                     android:layout_width="match_parent"

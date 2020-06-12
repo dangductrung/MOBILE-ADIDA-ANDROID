@@ -27,6 +27,7 @@
         <activity android:name=".statistic.StatisticPage" />
         <activity android:name=".report.ReportActivity" />
         <activity android:name=".login.LoginPage" />
+        <activity android:name=".history.HistoryPage"/>
         <activity
             android:name=".splash.SpashActivity"
             android:theme="@style/SplashTheme">
