@@ -104,17 +104,6 @@ public class ProfileFragment extends Fragment {
         btnEditButtonImage.setVisibility(View.VISIBLE);
         btnEditButtonText.setVisibility(View.INVISIBLE);
 
-        Button btnStatis = (Button) layout.findViewById(R.id.btnStatistic);
-
-        final Intent intent = new Intent(getActivity(), StatisticPage.class);
-
-        btnStatis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(intent);
-            }
-        });
-
         addAction();
         getUserData();
 
@@ -147,6 +136,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ReportActivity.class);
+                startActivity(intent);
+            }
+        });
+        btnStatistic.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), StatisticPage.class);
                 startActivity(intent);
             }
         });
