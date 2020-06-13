@@ -2,9 +2,11 @@ package com.adida.chatapp.webrtc_connector;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -121,6 +123,7 @@ public class RTCPeerConnectionWrapper {
         MediaConstraints sdpMediaConstraints = new MediaConstraints();
         //After joining a room, a peer will send offers to other peer in a room,
         peerConnection.createOffer(new SimpleSdpObserver() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onCreateSuccess(SessionDescription sessionDescription) {
                 Log.d("123", sessionDescription.description);
@@ -136,6 +139,7 @@ public class RTCPeerConnectionWrapper {
 
     public void createAnswer(){
         peerConnection.createAnswer(new SimpleSdpObserver() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onCreateSuccess(SessionDescription sessionDescription){
                         FirebaseManager.getInstance().sendSDP(remoteUserID,sessionDescription.description, FirebaseKeys.SDPAnswers);

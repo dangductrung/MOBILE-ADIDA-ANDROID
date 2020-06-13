@@ -43,7 +43,10 @@ public class StatisticPage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                userName.setText(user.name);
+                userName.setText(user.name.isEmpty() ? user.email : user.name);
+
+                
+
                 countChat.setText("Trong 1 tháng bạn đã chat: "+ user.countChatMessage +" lần");
                 countSession.setText("Trong 1 tháng bạn đã mở : "+ user.countCreateConnection +" cuộc hội thoại");
             }
