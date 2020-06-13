@@ -162,6 +162,7 @@ public class ProfileFragment extends Fragment {
         btnEditButtonText.setVisibility(View.VISIBLE);
         btnStatistic.setVisibility(View.INVISIBLE);
         btnSignout.setVisibility(View.INVISIBLE);
+        btnReport.setVisibility(View.INVISIBLE);
 
         txtProfileName.setEnabled(true);
         txtProfilePhone.setEnabled(true);
@@ -177,6 +178,7 @@ public class ProfileFragment extends Fragment {
         btnEditButtonImage.setVisibility(View.VISIBLE);
         btnStatistic.setVisibility(View.VISIBLE);
         btnSignout.setVisibility(View.VISIBLE);
+        btnReport.setVisibility(View.VISIBLE);
 
         txtProfileName.setEnabled(false);
         txtProfilePhone.setEnabled(false);
