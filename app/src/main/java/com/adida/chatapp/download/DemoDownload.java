@@ -3,6 +3,7 @@ package com.adida.chatapp.download;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,7 +22,8 @@ public class DemoDownload extends AppCompatActivity {
 
 //    String urlToFile = "https://file-examples.com/wp-content/uploads/2017/02/zip_5MB.zip";
     String urlToFile = "https://image.shutterstock.com/image-photo/bright-spring-view-cameo-island-260nw-1048185397.jpg";
-    static String APP_PATH = "/sdcard/chatapp/";
+//    static String APP_PATH = "/sdcard/chatapp/";
+    static String APP_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/chatapp";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,7 @@ public class DemoDownload extends AppCompatActivity {
 
         // create file path, etc...
         createPathIfNotExist(APP_PATH);
-        String destPath = APP_PATH + getFileName(urlToFile);
+        String destPath = APP_PATH + "/" + getFileName(urlToFile);
         // check if filename is image
         //...
 

@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.UUID;
 
 //https://stackoverflow.com/questions/3028306/download-a-file-with-android-and-showing-the-progress-in-a-progressdialog
 public class DownloadTask extends AsyncTask<String, Integer, String> {
@@ -23,10 +24,24 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         this.context = context;
     }
 
+    private String renameFile(String filename){
+
+        int pos = filename.lastIndexOf("/");
+        String newName = filename.substring(0, pos) // path to save folder
+                + "/"
+                + UUID.randomUUID().toString() // use uuid to make filename
+                + ".png";                       // use default .png extension
+        return newName;
+    }
+
     @Override
     protected String doInBackground(String... sUrl) {
 
+        // rename image file to ensure not missing extension
+        sUrl[1] = renameFile(sUrl[1]);
+
         Log.e("QT doinBackground", "url: " + sUrl[0]);
+        Log.e("QT doinBackground", "dest: " + sUrl[1]);
 
         InputStream input = null;
         OutputStream output = null;
@@ -45,6 +60,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                 return "Server returned HTTP " + connection.getResponseCode()
                         + " " + connection.getResponseMessage();
             }
+            Log.e("QT doinBackground", "code: " + connection.getResponseCode());
 
             // this will be useful to display download percentage
             // might be -1: server did not report the length
