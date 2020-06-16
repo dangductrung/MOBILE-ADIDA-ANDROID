@@ -221,7 +221,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.setMessage("Uploaded... ");
+                            progressDialog.setMessage("Uploading... ");
                         }
                     });
         }

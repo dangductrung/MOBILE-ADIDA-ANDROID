@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.adida.chatapp.login.LoginPage;
+import com.adida.chatapp.download.*;
 
 public class SpashActivity extends AppCompatActivity {
 
