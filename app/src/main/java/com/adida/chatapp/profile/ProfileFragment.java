@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.adida.chatapp.R;
 import com.adida.chatapp.entities.User;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
+import com.adida.chatapp.history.HistoryPage;
 import com.adida.chatapp.keys.FirebaseKeys;
 import com.adida.chatapp.login.LoginPage;
 import com.adida.chatapp.main.MainActivity;
@@ -48,7 +49,7 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     Button btnEditButtonText, btnStatistic, btnSignout, btnReport;
-    ImageButton btnEditButtonImage;
+    ImageButton btnEditButtonImage, btnHistoryButtonImage;
     EditText txtProfileName, txtProfilePhone;
     ProgressDialog progressDialog;
     TextView email;
@@ -95,6 +96,7 @@ public class ProfileFragment extends Fragment {
         txtProfilePhone = (EditText) layout.findViewById(R.id.txtProfilePhone);
 
         btnEditButtonImage = (ImageButton) layout.findViewById(R.id.btnEditButtonImage);
+        btnHistoryButtonImage = (ImageButton) layout.findViewById(R.id.btnHistoryButton);
         btnEditButtonText = (Button) layout.findViewById(R.id.btnEditButtonText);
         btnStatistic = (Button) layout.findViewById(R.id.btnStatistic);
         btnSignout = (Button) layout.findViewById(R.id.btnSignout);
@@ -103,17 +105,6 @@ public class ProfileFragment extends Fragment {
         email = (TextView) layout.findViewById(R.id.userEmail);
         btnEditButtonImage.setVisibility(View.VISIBLE);
         btnEditButtonText.setVisibility(View.INVISIBLE);
-
-        Button btnStatis = (Button) layout.findViewById(R.id.btnStatistic);
-
-        final Intent intent = new Intent(getActivity(), StatisticPage.class);
-
-        btnStatis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(intent);
-            }
-        });
 
         addAction();
         getUserData();
@@ -147,6 +138,20 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ReportActivity.class);
+                startActivity(intent);
+            }
+        });
+        btnStatistic.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), StatisticPage.class);
+                startActivity(intent);
+            }
+        });
+        btnHistoryButtonImage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HistoryPage.class);
                 startActivity(intent);
             }
         });

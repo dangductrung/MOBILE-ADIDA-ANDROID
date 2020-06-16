@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.adida.chatapp.R;
+import com.adida.chatapp.callscreen.AudioCallScreenActivity;
 import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.fixtures.MessagesFixtures;
 import com.adida.chatapp.chatscreen.models.Message;
@@ -56,7 +57,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         context.startActivity(actMessages);
         if (!ChatApplication.getInstance().getUserPeerConnections().containsKey(user.uuid)) {
             RTCPeerConnectionWrapper wrapper = new RTCPeerConnectionWrapper(user.uuid, context);
-            wrapper.StartDataChannel();
+            wrapper.startDataChannel();
             ChatApplication.getInstance().getUserPeerConnections().put(user.uuid, wrapper);
             wrapper.state = ActivityState.IN;
             wrapper.createOffer();
@@ -114,6 +115,10 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_chat_video) {
             CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+            return true;
+        }
+        else if(id ==R.id.action_chat_call){
+            AudioCallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
             return true;
         }
 
@@ -216,7 +221,7 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.setMessage("Uploaded... ");
+                            progressDialog.setMessage("Uploading... ");
                         }
                     });
         }
