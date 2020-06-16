@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.adida.chatapp.extendapplication.ChatApplication;
 
+import org.webrtc.AudioTrack;
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaStream;
@@ -49,12 +50,12 @@ public class SimplePCObserver {
 
             @Override
             public void onAddStream(MediaStream mediaStream) {
-
+                rtcPeerConnectionWrapper.getMediaStream(mediaStream);
             }
 
             @Override
             public void onRemoveStream(MediaStream mediaStream) {
-
+                //End call
             }
 
             @Override
@@ -101,19 +102,34 @@ public class SimplePCObserver {
             public void onAddTrack(RtpReceiver rtpReceiver, MediaStream[] mediaStreams) {
                 Log.d("onAddTrack", "onAddTrack: ");
                 //Get media from stream and create a video track
-//                MediaStream remoteMediaStream = mediaStreams[0];
-//                VideoTrack v= remoteMediaStream.videoTracks.get(0);
-//                v.setEnabled(true);
-//
-//                //Show remote stream in remote surface
-//                //SurfaceViewRenderer surfaceRemote = (SurfaceViewRenderer) ((Activity) context).findViewById(R.id.surfaceRemote);
-//                //v.addSink(surfaceRemote);
-//                rtcPeerConnectionWrapper.receiveOnAddTrackMessage(v);
                 MediaStream remoteMediaStream = mediaStreams[0];
-                VideoTrack v= remoteMediaStream.videoTracks.get(0);
-                v.setEnabled(true);
-                Log.d("receiveTrack",  v.id());
-                rtcPeerConnectionWrapper.receiveOnAddTrackMessage(v);
+
+                if(remoteMediaStream.videoTracks.size()>0){
+                    VideoTrack v= remoteMediaStream.videoTracks.get(0);
+                    v.setEnabled(true);
+
+                    //Show remote stream in remote surface
+                    //SurfaceViewRenderer surfaceRemote = (SurfaceViewRenderer) ((Activity) context).findViewById(R.id.surfaceRemote);
+                    //v.addSink(surfaceRemote);
+                    rtcPeerConnectionWrapper.receiveOnAddTrackMessage(v);
+                }
+
+//                MediaStream remoteMediaStream = mediaStreams[0];
+//
+//                //if(remoteMediaStream.videoTracks.size()>0){
+//                    VideoTrack v= remoteMediaStream.videoTracks.get(0);
+//                    //if(!v.enabled())
+//                        v.setEnabled(true);
+//                receiveOnAddTrackMessage
+//                //}
+//
+                if(remoteMediaStream.audioTracks.size()>0){
+                    AudioTrack audioTrack= remoteMediaStream.audioTracks.get(0);
+                    if(audioTrack!=null) {
+                        audioTrack.setEnabled(true);
+                        rtcPeerConnectionWrapper.receiveAddTrackMessage(audioTrack);
+                    }
+                }
             }
 
         };
