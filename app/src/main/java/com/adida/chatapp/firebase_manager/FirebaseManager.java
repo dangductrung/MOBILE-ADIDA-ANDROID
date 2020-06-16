@@ -1,9 +1,11 @@
 package com.adida.chatapp.firebase_manager;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.adida.chatapp.entities.IceCandidate;
 import com.adida.chatapp.entities.Report;
@@ -17,6 +19,9 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FirebaseManager {
     private static FirebaseManager instance;
@@ -48,15 +53,33 @@ public class FirebaseManager {
         //addListenEvent(context);
     }
 
-    public void sendSDP(String remoteUserID,String sdp,String firebaseKey)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void sendSDP(String remoteUserID, String sdp, String firebaseKey)
     {
         String localUuid=SharePref.getInstance(context).getUuid();
         SDPInfo sdpInfo= new SDPInfo();
         // TODO: Set current user uuid
         sdpInfo.uuid = localUuid;
         sdpInfo.description = sdp;
-
+        // Create offer
         FirebaseDatabase.getInstance().getReference(firebaseKey).child(remoteUserID).child(localUuid).setValue(sdpInfo);
+
+        //Record History
+        recordHistory(remoteUserID, sdp);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void recordHistory(String remoteId, String sdp) {
+        String localUuid=SharePref.getInstance(context).getUuid();
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        if(sdp.contains("m=video")){
+            FirebaseDatabase.getInstance().getReference(FirebaseKeys.history).child(localUuid).child(FirebaseKeys.video).child(dtf.format(now)).setValue(remoteId);
+        } else {
+            FirebaseDatabase.getInstance().getReference(FirebaseKeys.history).child(localUuid).child(FirebaseKeys.chat).child(dtf.format(now)).setValue(remoteId);
+        }
     }
 
     public void sendIceCandidate(String remoteUserID,int sdpMLineIndex,String sdpMid,String sdp)
@@ -101,6 +124,8 @@ public class FirebaseManager {
                 }
 
                 wrapper.receiveOffer(sdpInfo.description);
+
+
             }
 
             @Override
