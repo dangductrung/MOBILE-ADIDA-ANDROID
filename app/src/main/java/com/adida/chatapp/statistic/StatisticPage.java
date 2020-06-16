@@ -45,15 +45,6 @@ public class StatisticPage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-<<<<<<< Updated upstream
-                userName.setText(user.name.isEmpty() ? user.email : user.name);
-
-                
-
-=======
-<<<<<<< Updated upstream
-                userName.setText(user.name);
-=======
                 userName.setText(user.name.isEmpty() ? user.email : user.name);
 
                 FirebaseDatabase.getInstance().getReference(FirebaseKeys.history).child(SharePref.getInstance(getApplicationContext()).getUuid()).addValueEventListener(new ValueEventListener() {
@@ -83,8 +74,6 @@ public class StatisticPage extends AppCompatActivity {
                     }
                 });
 
->>>>>>> Stashed changes
->>>>>>> Stashed changes
                 countChat.setText("Trong 1 tháng bạn đã chat: "+ user.countChatMessage +" lần");
                 countSession.setText("Trong 1 tháng bạn đã mở : "+ user.countCreateConnection +" cuộc hội thoại");
             }
