@@ -1,8 +1,10 @@
 package com.adida.chatapp.chatscreen;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.adida.chatapp.R;
 import com.adida.chatapp.callscreen.AudioCallScreenActivity;
@@ -114,17 +119,71 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_chat_video) {
-            CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
-            return true;
+            return onCallVideoActivityOpen();
         }
         else if(id ==R.id.action_chat_call){
-            AudioCallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
-            return true;
+            return onCallActivityOpen();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public boolean onCallVideoActivityOpen() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+        } else {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 100);
+        }
+        return true;
+    }
+
+    public boolean onCallActivityOpen() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            AudioCallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+
+        } else {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.RECORD_AUDIO}, 101);
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+            }
+            else {
+                Toast.makeText(this,
+                        "Camera & audio Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } else if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                AudioCallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+            }
+            else {
+                Toast.makeText(this,
+                        "Audio Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } else if (requestCode == 103) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            }
+            else {
+                Toast.makeText(this,
+                        "Storage Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
 
     public void loadPendingMessage() {
         for (int i = 0; i < PendingMessageManager.pending.size(); ++i) {
@@ -171,10 +230,19 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
 
     @Override
     public void onAddAttachments() {
-        openGallery();
+        checkStoragePermission();
+    }
+
+    private void checkStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            openGallery();
+        } else {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 103);
+        }
     }
 
     private void openGallery() {
+
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
