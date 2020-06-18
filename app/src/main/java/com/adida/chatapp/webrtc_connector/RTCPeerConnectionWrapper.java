@@ -327,7 +327,14 @@ public class RTCPeerConnectionWrapper {
 
     public void receiveAddTrackMessage(AudioTrack audioTrack){
         audioTrack.setVolume(1);
-        Log.d("123", "receiveAddTrackMessage: "+audioTrack.enabled());
+        Activity activity= (Activity)activityContext;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CallScreenActivity activityCallScreen= (CallScreenActivity) callContext;
+                activityCallScreen.addRemoteAudioTrack(audioTrack);
+            }
+        });
     }
 
     public void getMediaStream(MediaStream mediaStream){
