@@ -163,26 +163,35 @@ public class CallScreenActivity extends AppCompatActivity {
         v.addSink(surfaceRemote);
     }
 
+    public void addRemoteAudioTrack(AudioTrack v){
+        audioTrackRemote=v;
+    }
+
     public void StopCall() throws InterruptedException {
-        if(wrapper!=null){
-            if(videoTrackRemote!=null) {
+        if(wrapper!=null) {
+            if (videoTrackRemote != null) {
                 videoTrackRemote.removeSink(surfaceRemote);
                 videoTrackRemote.setEnabled(false);
 
-                if(surfaceRemote!=null){
+                if (surfaceRemote != null) {
                     surfaceRemote.release();
                 }
             }
-            if(videoTrackFromCamera!=null){
+            if (videoTrackFromCamera != null) {
                 videoTrackFromCamera.removeSink(surfaceLocal);
                 videoTrackFromCamera.setEnabled(false);
 
-                if(surfaceLocal!=null)
+                if (surfaceLocal != null)
                     surfaceLocal.release();
             }
 
-            if(audioTrackRemote!=null)
+            if (audioTrackRemote != null){
                 audioTrackRemote.setEnabled(false);
+                audioTrackLocal.setEnabled(false);
+
+                if(wrapper!=null)
+                    wrapper.removeTrack(audioTrackRemote);
+            }
 
             //ChatApplication.RootEglBase=EglBase.create();
 
