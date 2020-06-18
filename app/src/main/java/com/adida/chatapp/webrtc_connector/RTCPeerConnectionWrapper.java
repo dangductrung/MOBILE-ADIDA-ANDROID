@@ -1,14 +1,18 @@
 package com.adida.chatapp.webrtc_connector;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.adida.chatapp.R;
 import com.adida.chatapp.callscreen.AudioCallScreenActivity;
@@ -18,7 +22,6 @@ import com.adida.chatapp.entities.User;
 import com.adida.chatapp.extendapplication.ChatApplication;
 import com.adida.chatapp.firebase_manager.FirebaseManager;
 import com.adida.chatapp.keys.FirebaseKeys;
-import com.adida.chatapp.main.MainActivity;
 import com.adida.chatapp.message.PendingMessage;
 import com.adida.chatapp.sharepref.SharePref;
 import com.google.firebase.database.DataSnapshot;
@@ -31,10 +34,8 @@ import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
-import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;
 import org.webrtc.RtpSender;
-import org.webrtc.RtpTransceiver;
 import org.webrtc.SessionDescription;
 import org.webrtc.VideoTrack;
 
@@ -204,10 +205,26 @@ public class RTCPeerConnectionWrapper {
     public void receiveOffer(String sdp){
         //Prompt yes/no
         if(sdp.contains("m=video")){
-            CallScreenActivity.open(activityContext,remoteUserID,sdp,true);
+            if (ContextCompat.checkSelfPermission(activityContext, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(activityContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                CallScreenActivity.open(activityContext,remoteUserID,sdp,true);
+            } else {
+                Toast.makeText(activityContext,
+                        "Camera & audio Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
         else if (sdp.contains("m=audio")){
-            AudioCallScreenActivity.open(activityContext,remoteUserID,sdp,true);
+
+            if ( ContextCompat.checkSelfPermission(activityContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                AudioCallScreenActivity.open(activityContext,remoteUserID,sdp,true);
+            } else {
+                Toast.makeText(activityContext,
+                        "Audio Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
         else{
             peerConnection.setRemoteDescription(new SimpleSdpObserver()
@@ -215,7 +232,10 @@ public class RTCPeerConnectionWrapper {
 
             createAnswer();
         }
+
     }
+
+
 
     public void setRemoteDescription(String sdp){
         peerConnection.setRemoteDescription(new SimpleSdpObserver()
