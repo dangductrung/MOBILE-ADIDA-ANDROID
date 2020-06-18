@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.adida.chatapp.R;
-import com.adida.chatapp.callscreen.AudioCallScreenActivity;
 import com.adida.chatapp.callscreen.CallScreenActivity;
 import com.adida.chatapp.chatscreen.fixtures.MessagesFixtures;
 import com.adida.chatapp.chatscreen.models.Message;
@@ -117,10 +116,10 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
             CallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
             return true;
         }
-        else if(id ==R.id.action_chat_call){
-            AudioCallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
-            return true;
-        }
+//        else if(id ==R.id.action_chat_call){
+//            AudioCallScreenActivity.open(DefaultMessagesActivity.this,remoteUserId,false);
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
