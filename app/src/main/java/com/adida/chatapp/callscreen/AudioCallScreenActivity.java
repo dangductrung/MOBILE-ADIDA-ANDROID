@@ -116,5 +116,9 @@ public class AudioCallScreenActivity extends AppCompatActivity {
         }
         finish();
     }
+
+    public void addRemoteAudioTrack(AudioTrack v){
+        audioTrackRemote=v;
+    }
 }
 

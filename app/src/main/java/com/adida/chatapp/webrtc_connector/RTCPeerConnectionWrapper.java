@@ -329,8 +329,15 @@ public class RTCPeerConnectionWrapper {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                CallScreenActivity activityCallScreen= (CallScreenActivity) callContext;
-                activityCallScreen.addRemoteAudioTrack(audioTrack);
+                if(callContext.getClass()==CallScreenActivity.class){
+                    CallScreenActivity activityCallScreen= (CallScreenActivity) callContext;
+                    activityCallScreen.addRemoteAudioTrack(audioTrack);
+                }
+                else if(callContext.getClass()==AudioCallScreenActivity.class){
+                    AudioCallScreenActivity audioCallScreenActivity=(AudioCallScreenActivity)callContext;
+                    audioCallScreenActivity.addRemoteAudioTrack(audioTrack);
+                }
+
             }
         });
     }
